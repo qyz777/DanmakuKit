@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'DanmakuKit_Example' do
+  pod 'DanmakuKit', :path => '../'
+
+  target 'DanmakuKit_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
