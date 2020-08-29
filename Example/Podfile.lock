@@ -1,0 +1,16 @@
+PODS:
+  - DanmakuKit (0.1.0)
+
+DEPENDENCIES:
+  - DanmakuKit (from `../`)
+
+EXTERNAL SOURCES:
+  DanmakuKit:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  DanmakuKit: e78aa392e35ddf4e95d3e22c6c74ae956e09b25a
+
+PODFILE CHECKSUM: 8e9b8444dad9359bb2677184bd560a4dc55cd22d
+
+COCOAPODS: 1.8.4
