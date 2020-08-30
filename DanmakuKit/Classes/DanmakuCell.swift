@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class DanmakuCell: UIView {
+open class DanmakuCell: UIView {
 
     public var model: DanmakuCellModel?
     
@@ -20,26 +20,16 @@ public class DanmakuCell: UIView {
         setupLayer()
     }
     
-    required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-}
-
-public extension DanmakuCell {
+    open func willDisplay() {}
     
-    func willDisplay() {
-        
-    }
+    open func displaying(_ context: CGContext, _ size: CGSize, _ isCancelled: Bool) {}
     
-    func displaying(_ context: CGContext, _ size: CGSize, _ isCancelled: Bool) {
-        
-    }
-    
-    func didDisplay(_ finished: Bool) {
-        
-    }
-    
+    open func didDisplay(_ finished: Bool) {}
+       
 }
 
 extension DanmakuCell {

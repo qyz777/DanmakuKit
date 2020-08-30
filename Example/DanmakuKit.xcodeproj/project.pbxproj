@@ -15,6 +15,9 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		A076E08324FA80B200A8FC06 /* DanmakuTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A076E08224FA80B200A8FC06 /* DanmakuTextCell.swift */; };
+		A076E08524FA80C800A8FC06 /* DanmakuTextCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A076E08424FA80C800A8FC06 /* DanmakuTextCellModel.swift */; };
+		A076E08724FB79B300A8FC06 /* FunctionDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A076E08624FB79B300A8FC06 /* FunctionDemoViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,7 +32,7 @@
 
 /* Begin PBXFileReference section */
 		1D101944CD8F2023168DF50E /* Pods_DanmakuKit_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DanmakuKit_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		1DCAB33335F0AD2638CF0E0D /* DanmakuKit.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = DanmakuKit.podspec; path = ../DanmakuKit.podspec; sourceTree = "<group>"; };
+		1DCAB33335F0AD2638CF0E0D /* DanmakuKit.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = DanmakuKit.podspec; path = ../DanmakuKit.podspec; sourceTree = "<group>"; };
 		1FA9FDB9BDA6785F330F9ACD /* Pods-DanmakuKit_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DanmakuKit_Tests.release.xcconfig"; path = "Target Support Files/Pods-DanmakuKit_Tests/Pods-DanmakuKit_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		26D2089B0AB2D8D386FC641F /* Pods_DanmakuKit_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DanmakuKit_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		50995B1A95020F1ED52DF199 /* Pods-DanmakuKit_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DanmakuKit_Example.release.xcconfig"; path = "Target Support Files/Pods-DanmakuKit_Example/Pods-DanmakuKit_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -43,10 +46,13 @@
 		607FACE51AFB9204008FA782 /* DanmakuKit_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DanmakuKit_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
-		AA16C3617F09A2E85304E8B9 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		A076E08224FA80B200A8FC06 /* DanmakuTextCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuTextCell.swift; sourceTree = "<group>"; };
+		A076E08424FA80C800A8FC06 /* DanmakuTextCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuTextCellModel.swift; sourceTree = "<group>"; };
+		A076E08624FB79B300A8FC06 /* FunctionDemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionDemoViewController.swift; sourceTree = "<group>"; };
+		AA16C3617F09A2E85304E8B9 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		CA5BFE3043DC2B7C09EDCE06 /* Pods-DanmakuKit_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DanmakuKit_Tests.debug.xcconfig"; path = "Target Support Files/Pods-DanmakuKit_Tests/Pods-DanmakuKit_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		CDB672DA59492FFD0B896F83 /* Pods-DanmakuKit_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DanmakuKit_Example.debug.xcconfig"; path = "Target Support Files/Pods-DanmakuKit_Example/Pods-DanmakuKit_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		D633F0E376FE4F100184B4D4 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		D633F0E376FE4F100184B4D4 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +105,9 @@
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
+				A076E08224FA80B200A8FC06 /* DanmakuTextCell.swift */,
+				A076E08424FA80C800A8FC06 /* DanmakuTextCellModel.swift */,
+				A076E08624FB79B300A8FC06 /* FunctionDemoViewController.swift */,
 			);
 			name = "Example for DanmakuKit";
 			path = DanmakuKit;
@@ -147,7 +156,6 @@
 				CA5BFE3043DC2B7C09EDCE06 /* Pods-DanmakuKit_Tests.debug.xcconfig */,
 				1FA9FDB9BDA6785F330F9ACD /* Pods-DanmakuKit_Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -227,6 +235,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -331,8 +340,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A076E08524FA80C800A8FC06 /* DanmakuTextCellModel.swift in Sources */,
+				A076E08724FB79B300A8FC06 /* FunctionDemoViewController.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				A076E08324FA80B200A8FC06 /* DanmakuTextCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

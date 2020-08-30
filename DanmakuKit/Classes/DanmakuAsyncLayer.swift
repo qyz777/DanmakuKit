@@ -24,6 +24,8 @@ class Sentinel {
     
 }
 
+fileprivate let pool = DanmakuQueuePool(name: "com.DanmakuKit.DanmakuAsynclayer", queueCount: 16, qos: .userInteractive)
+
 class DanmakuAsyncLayer: CALayer {
     
     /// When true, it is drawn asynchronously and is ture by default.
@@ -37,11 +39,13 @@ class DanmakuAsyncLayer: CALayer {
     
     private let sentinel = Sentinel()
     
-    private let pool = DanmakuQueuePool(name: "com.DanmakuKit.DanmakuAsynclayer", queueCount: 16, qos: .userInteractive)
-    
     override init() {
         super.init()
         contentsScale = UIScreen.main.scale
+    }
+    
+    override init(layer: Any) {
+        super.init(layer: layer)
     }
     
     required init?(coder: NSCoder) {
@@ -80,12 +84,27 @@ class DanmakuAsyncLayer: CALayer {
             let size = bounds.size
             let scale = contentsScale
             let opaque = isOpaque
+            let backgroundColor = (opaque && self.backgroundColor != nil) ? self.backgroundColor : nil
             pool.queue.async {
                 guard !isCancelled() else { return }
                 UIGraphicsBeginImageContextWithOptions(size, opaque, scale)
                 guard let context = UIGraphicsGetCurrentContext() else {
                     UIGraphicsEndImageContext()
                     return
+                }
+                if opaque {
+                    context.saveGState()
+                    if backgroundColor == nil || (backgroundColor?.alpha ?? 0) < 1 {
+                        context.setFillColor(UIColor.white.cgColor)
+                        context.addRect(CGRect(x: 0, y: 0, width: size.width * scale, height: size.height * scale))
+                        context.fillPath()
+                    }
+                    if let backgroundColor = backgroundColor {
+                        context.setFillColor(backgroundColor)
+                        context.addRect(CGRect(x: 0, y: 0, width: size.width * scale, height: size.height * scale))
+                        context.fillPath()
+                    }
+                    context.restoreGState()
                 }
                 self.displaying?(context, size, isCancelled)
                 if isCancelled() {

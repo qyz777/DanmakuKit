@@ -36,6 +36,8 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     
     private weak var view: UIView?
     
+    var stopClosure: ((_ cell: DanmakuCell) -> Void)?
+    
     required init(view: UIView) {
         self.view = view
     }
@@ -95,19 +97,29 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
         guard let danmaku = anim.value(forKey: DANMAKU_CELL_KEY) as? DanmakuCell else { return }
         danmaku.center = CGPoint(x: danmaku.realFrame.midX, y: danmaku.realFrame.midY)
         danmaku.layer.removeAllAnimations()
-        cells.removeAll { (cell) -> Bool in
-            return cell == danmaku
+        if danmaku.center.x <= -danmaku.frame.width {
+            var findCell: DanmakuCell?
+            cells.removeAll { (cell) -> Bool in
+                let flag = cell == danmaku
+                if flag {
+                    findCell = cell
+                }
+                return flag
+            }
+            if let cell = findCell {
+                stopClosure?(cell)
+            }
         }
     }
     
     private func addAnimation(to danmaku: DanmakuCell) {
         guard let cellModel = danmaku.model else { return }
-        let rate = danmaku.realFrame.minX / view!.bounds.width
+        let rate = danmaku.realFrame.midX / (view!.bounds.width + danmaku.frame.width)
         let animation = CABasicAnimation(keyPath: "position.x")
         animation.beginTime = CACurrentMediaTime()
         animation.duration = cellModel.displayTime * Double(rate)
         animation.delegate = self
-        animation.fromValue = NSNumber(value: Float(view!.bounds.width + danmaku.bounds.width / 2.0))
+        animation.fromValue = NSNumber(value: Float(danmaku.layer.position.x))
         animation.toValue = NSNumber(value: Float(-danmaku.bounds.width / 2.0))
         animation.isRemovedOnCompletion = false
         animation.fillMode = kCAFillModeForwards
