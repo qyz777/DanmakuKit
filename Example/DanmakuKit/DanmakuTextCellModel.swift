@@ -11,7 +11,11 @@ import DanmakuKit
 
 class DanmakuTextCellModel: DanmakuCellModel {
     
+    var id = ""
+    
     var text = ""
+    
+    var font = UIFont.systemFont(ofSize: 15)
     
     var cellClass: DanmakuCell.Type {
         return DanmakuTextCell.self
@@ -19,22 +23,23 @@ class DanmakuTextCellModel: DanmakuCellModel {
     
     var nameSpace: String?
     
-    var size: CGSize {
-        return CGSize(width: 100, height: 20)
-    }
+    var size: CGSize = .zero
     
     var track: UInt?
     
-    var displayTime: Double {
-        return 8
-    }
+    var displayTime: Double = 8
     
     var type: DanmakuCellType {
         return .floating
     }
     
     func calculateSize() {
-        
+        size = NSString(string: text).boundingRect(with: CGSize(width: CGFloat(Float.infinity
+            ), height: 20), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [.font: font], context: nil).size
+    }
+    
+    static func == (lhs: DanmakuTextCellModel, rhs: DanmakuTextCellModel) -> Bool {
+        return lhs.id == rhs.id
     }
     
 }

@@ -29,6 +29,13 @@ open class DanmakuCell: UIView {
     open func displaying(_ context: CGContext, _ size: CGSize, _ isCancelled: Bool) {}
     
     open func didDisplay(_ finished: Bool) {}
+    
+    public var displayAsync = true {
+        didSet {
+            guard let layer = layer as? DanmakuAsyncLayer else { return }
+            layer.displayAsync = oldValue
+        }
+    }
        
 }
 

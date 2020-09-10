@@ -13,13 +13,21 @@ public protocol DanmakuViewDelegate: class {
     
     func danmakuView(_ danmakuView: DanmakuView, noSpaceShoot danmaku: DanmakuCellModel)
     
+    func danmakuView(_ danmakuView: DanmakuView, willDisplay danmaku: DanmakuCell)
+    
+    func danmakuView(_ danmakuView: DanmakuView, didEndDisplaying danmaku: DanmakuCell)
+    
 }
 
-extension DanmakuViewDelegate {
+public extension DanmakuViewDelegate {
     
     func danmakuView(_ danmakuView: DanmakuView, dequeueReusable cell: DanmakuCell) {}
     
     func danmakuView(_ danmakuView: DanmakuView, noSpaceShoot danmaku: DanmakuCellModel) {}
+    
+    func danmakuView(_ danmakuView: DanmakuView, willDisplay danmaku: DanmakuCell) {}
+    
+    func danmakuView(_ danmakuView: DanmakuView, didEndDisplaying danmaku: DanmakuCell) {}
     
 }
 
@@ -66,10 +74,14 @@ public class DanmakuView: UIView {
 public extension DanmakuView {
     
     func shoot(danmaku: DanmakuCellModel) {
+        guard status == .play else { return }
         var findCell: DanmakuCell?
         if enableCellReusable {
             var cells = danmakuPool[NSStringFromClass(danmaku.cellClass)]
-            findCell = cells?.removeFirst()
+            if cells == nil {
+                danmakuPool[NSStringFromClass(danmaku.cellClass)] = []
+            }
+            findCell = (cells?.count ?? 0) > 0 ? cells?.removeFirst() : nil
         }
         
         if findCell == nil {
@@ -92,11 +104,13 @@ public extension DanmakuView {
             addSubview(cell)
         }
         
+        delegate?.danmakuView(self, willDisplay: cell)
         cell.layer.setNeedsDisplay()
         track.shoot(danmaku: cell)
     }
     
     func canShoot(danmaku: DanmakuCellModel) -> Bool {
+        guard status == .play else { return false }
         return (floatingTracks.first { (t) -> Bool in
             return t.canShoot(danmaku: danmaku)
         }) != nil
@@ -113,6 +127,7 @@ public extension DanmakuView {
                 track.stopClosure = { [weak self] (cell) in
                     guard let strongSelf = self else { return }
                     guard let cs = cell.model?.cellClass else { return }
+                    strongSelf.delegate?.danmakuView(strongSelf, didEndDisplaying: cell)
                     guard var array = strongSelf.danmakuPool[NSStringFromClass(cs)] else { return }
                     array.append(cell)
                 }

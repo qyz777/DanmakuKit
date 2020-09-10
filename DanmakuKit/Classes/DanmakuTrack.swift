@@ -54,17 +54,27 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
         guard let cellModel = cell.model else { return true }
         
         //1. 获取前一个cell剩余的运动时间
-        let prevCellTime = cell.realFrame.maxX / view!.bounds.width * CGFloat(cellModel.displayTime)
-        //2. 计算出路程差
-        let distance = view!.bounds.width - cell.realFrame.maxX
-        let preV = Float(view!.bounds.width / CGFloat(cellModel.displayTime))
-        let nextV = Float(view!.bounds.width / CGFloat(danmaku.displayTime))
+        let preWidth = view!.bounds.width + cell.frame.width
+        let nextWidth = view!.bounds.width + danmaku.size.width
+        let preRight = max(cell.realFrame.maxX, 0)
+        let preCellTime = min(preRight / preWidth * CGFloat(cellModel.displayTime), CGFloat(cellModel.displayTime))
+        //2. 计算出路程差，减10防止刚好追上
+        let distance = view!.bounds.width - preRight - 10
+        guard distance >= 0 else {
+            //路程小于0说明当前轨道有一条弹幕刚发送
+            return false
+        }
+        let preV = preWidth / CGFloat(cellModel.displayTime)
+        let nextV = nextWidth / CGFloat(danmaku.displayTime)
         //3. 计算出速度差
-        let velocity = CGFloat(fabsf(preV - nextV))
+        if nextV - preV <= 0 {
+            //速度差小于等于0说明永远也追不上
+            return true
+        }
         //4. 计算出追击时间
-        let time = distance / velocity
+        let time = (distance / (nextV - preV))
         
-        if time < prevCellTime {
+        if time < preCellTime {
             //弹幕会追击到前一个
             return false
         }
@@ -95,9 +105,7 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         guard let danmaku = anim.value(forKey: DANMAKU_CELL_KEY) as? DanmakuCell else { return }
-        danmaku.center = CGPoint(x: danmaku.realFrame.midX, y: danmaku.realFrame.midY)
-        danmaku.layer.removeAllAnimations()
-        if danmaku.center.x <= -danmaku.frame.width {
+        if danmaku.frame.maxX <= 0 || flag {
             var findCell: DanmakuCell?
             cells.removeAll { (cell) -> Bool in
                 let flag = cell == danmaku
@@ -114,7 +122,7 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     
     private func addAnimation(to danmaku: DanmakuCell) {
         guard let cellModel = danmaku.model else { return }
-        let rate = danmaku.realFrame.midX / (view!.bounds.width + danmaku.frame.width)
+        let rate = danmaku.frame.midX / (view!.bounds.width + danmaku.frame.width)
         let animation = CABasicAnimation(keyPath: "position.x")
         animation.beginTime = CACurrentMediaTime()
         animation.duration = cellModel.displayTime * Double(rate)
