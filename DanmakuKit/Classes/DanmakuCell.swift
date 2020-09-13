@@ -11,6 +11,10 @@ open class DanmakuCell: UIView {
 
     public var model: DanmakuCellModel?
     
+    public internal(set) var animationTime: TimeInterval = 0
+    
+    var animationBeginTime: TimeInterval = 0
+    
     public override class var layerClass: AnyClass {
         return DanmakuAsyncLayer.self
     }

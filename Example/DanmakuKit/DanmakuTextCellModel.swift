@@ -29,9 +29,7 @@ class DanmakuTextCellModel: DanmakuCellModel {
     
     var displayTime: Double = 8
     
-    var type: DanmakuCellType {
-        return .floating
-    }
+    var type: DanmakuCellType = .floating
     
     func calculateSize() {
         size = NSString(string: text).boundingRect(with: CGSize(width: CGFloat(Float.infinity

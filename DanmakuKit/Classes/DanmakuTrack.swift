@@ -7,7 +7,15 @@
 
 import UIKit
 
+let MAX_FLOAT_X = CGFloat.infinity / 2.0
+
+//MARK: DanmakuTrack
+
 protocol DanmakuTrack {
+    
+    var positionY: CGFloat { get set }
+    
+    var stopClosure: ((_ cell: DanmakuCell) -> Void)? { get set }
     
     init(view: UIView)
     
@@ -21,22 +29,23 @@ protocol DanmakuTrack {
     
     func stop()
     
-    var positionY: CGFloat { get set }
-    
 }
 
 let FLOATING_ANIMATION_KEY = "FLOATING_ANIMATION_KEY"
+let TOP_ANIMATION_KEY = "TOP_ANIMATION_KEY"
 let DANMAKU_CELL_KEY = "DANMAKU_CELL_KEY"
+
+//MARK: DanmakuFloatingTrack
 
 class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     
     var positionY: CGFloat = 0
     
+    var stopClosure: ((_ cell: DanmakuCell) -> Void)?
+    
     private var cells: [DanmakuCell] = []
     
     private weak var view: UIView?
-    
-    var stopClosure: ((_ cell: DanmakuCell) -> Void)?
     
     required init(view: UIView) {
         self.view = view
@@ -44,6 +53,7 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     
     func shoot(danmaku: DanmakuCell) {
         danmaku.layer.position = CGPoint(x: view!.bounds.width + danmaku.bounds.width / 2.0, y: positionY)
+        prepare(danmaku: danmaku)
         addAnimation(to: danmaku)
         cells.append(danmaku)
     }
@@ -105,7 +115,8 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         guard let danmaku = anim.value(forKey: DANMAKU_CELL_KEY) as? DanmakuCell else { return }
-        if danmaku.frame.maxX <= 0 || flag {
+        danmaku.animationTime += CFAbsoluteTimeGetCurrent() - danmaku.animationBeginTime
+        if flag {
             var findCell: DanmakuCell?
             cells.removeAll { (cell) -> Bool in
                 let flag = cell == danmaku
@@ -116,12 +127,15 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
             }
             if let cell = findCell {
                 stopClosure?(cell)
+                danmaku.layer.removeAllAnimations()
+                danmaku.frame.origin.x = MAX_FLOAT_X
             }
         }
     }
     
     private func addAnimation(to danmaku: DanmakuCell) {
         guard let cellModel = danmaku.model else { return }
+        danmaku.animationBeginTime = CFAbsoluteTimeGetCurrent()
         let rate = danmaku.frame.midX / (view!.bounds.width + danmaku.frame.width)
         let animation = CABasicAnimation(keyPath: "position.x")
         animation.beginTime = CACurrentMediaTime()
@@ -135,4 +149,83 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
         danmaku.layer.add(animation, forKey: FLOATING_ANIMATION_KEY)
     }
     
+}
+
+//MARK: DanmakuTopTrack
+
+class DanmakuTopTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
+    
+    var positionY: CGFloat = 0
+    
+    var stopClosure: ((_ cell: DanmakuCell) -> Void)?
+    
+    var cell: DanmakuCell?
+    
+    private weak var view: UIView?
+    
+    required init(view: UIView) {
+        self.view = view
+    }
+    
+    func shoot(danmaku: DanmakuCell) {
+        cell = danmaku
+        danmaku.layer.position = CGPoint(x: view!.bounds.width / 2.0, y: positionY)
+        prepare(danmaku: danmaku)
+        addAnimation(to: danmaku)
+    }
+    
+    func canShoot(danmaku: DanmakuCellModel) -> Bool {
+        return cell == nil
+    }
+    
+    func play() {
+        guard let cell = cell else { return }
+        addAnimation(to: cell)
+    }
+    
+    func pause() {
+        guard let cell = cell else { return }
+        cell.layer.removeAllAnimations()
+    }
+    
+    func stop() {
+        guard let cell = cell else { return }
+        cell.removeFromSuperview()
+        cell.layer.removeAllAnimations()
+    }
+    
+    
+    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+        guard let danmaku = anim.value(forKey: DANMAKU_CELL_KEY) as? DanmakuCell else { return }
+        danmaku.animationTime += CFAbsoluteTimeGetCurrent() - danmaku.animationBeginTime
+        if flag {
+            stopClosure?(danmaku)
+            danmaku.layer.removeAllAnimations()
+            danmaku.frame.origin.x = MAX_FLOAT_X
+            cell = nil
+        }
+    }
+    
+    private func addAnimation(to danmaku: DanmakuCell) {
+        guard let cellModel = danmaku.model else { return }
+        danmaku.animationBeginTime = CFAbsoluteTimeGetCurrent()
+        let rate = cellModel.displayTime == 0 ? 0 : (1 - danmaku.animationTime / cellModel.displayTime)
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.beginTime = CACurrentMediaTime() + cellModel.displayTime * rate
+        animation.duration = 0
+        animation.delegate = self
+        animation.fromValue = 1
+        animation.toValue = 0
+        animation.isRemovedOnCompletion = false
+        animation.fillMode = kCAFillModeForwards
+        animation.setValue(danmaku, forKey: DANMAKU_CELL_KEY)
+        danmaku.layer.add(animation, forKey: TOP_ANIMATION_KEY)
+    }
+    
+}
+
+func prepare(danmaku: DanmakuCell) {
+    danmaku.animationTime = 0
+    danmaku.animationBeginTime = 0
+    danmaku.layer.opacity = 1
 }

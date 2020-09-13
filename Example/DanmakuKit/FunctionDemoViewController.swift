@@ -63,6 +63,9 @@ class FunctionDemoViewController: UIViewController {
         cellModel.text = contents[index]
         cellModel.id = String(arc4random())
         cellModel.calculateSize()
+        if randomIntNumber(lower: 0, upper: 10) < 5 {
+            cellModel.type = .top
+        }
         danmakuView.shoot(danmaku: cellModel)
         danmakus.append(cellModel)
     }
@@ -93,12 +96,13 @@ class FunctionDemoViewController: UIViewController {
     
     @objc
     func changeSpeed(_ sender: UISlider) {
-        danmakuView.pause()
-        displayTime = Double(sender.value)
-        danmakus.forEach {
-            $0.displayTime = displayTime
+        danmakuView.update { [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.displayTime = Double(sender.value)
+            strongSelf.danmakus.forEach {
+                $0.displayTime = displayTime
+            }
         }
-        danmakuView.play()
     }
     
     func randomIntNumber(lower: Int = 0,upper: Int = Int(UInt32.max)) -> Int {

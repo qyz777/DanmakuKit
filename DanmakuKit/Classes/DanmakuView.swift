@@ -54,10 +54,12 @@ public class DanmakuView: UIView {
     private var danmakuPool: [String: [DanmakuCell]] = [:]
     
     private var floatingTracks: [DanmakuTrack] = []
+    
+    private var topTracks: [DanmakuTrack] = []
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
-        recaculateTrack()
+        recaculateTracks()
     }
     
     required init?(coder: NSCoder) {
@@ -66,7 +68,7 @@ public class DanmakuView: UIView {
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-        recaculateTrack()
+        recaculateTracks()
     }
 
 }
@@ -93,11 +95,25 @@ public extension DanmakuView {
         }
         
         guard let cell = findCell else { return }
-        guard let track = floatingTracks.first(where: { (t) -> Bool in
-            return t.canShoot(danmaku: danmaku)
-        }) else {
-            delegate?.danmakuView(self, noSpaceShoot: danmaku)
-            return
+        
+        let shootTrack: DanmakuTrack
+        switch danmaku.type {
+        case .floating:
+            guard let track = floatingTracks.first(where: { (t) -> Bool in
+                return t.canShoot(danmaku: danmaku)
+            }) else {
+                delegate?.danmakuView(self, noSpaceShoot: danmaku)
+                return
+            }
+            shootTrack = track
+        case .top, .bottom:
+            guard let track = topTracks.first(where: { (t) -> Bool in
+                return t.canShoot(danmaku: danmaku)
+            }) else {
+                delegate?.danmakuView(self, noSpaceShoot: danmaku)
+                return
+            }
+            shootTrack = track
         }
         
         if cell.superview == nil {
@@ -106,7 +122,7 @@ public extension DanmakuView {
         
         delegate?.danmakuView(self, willDisplay: cell)
         cell.layer.setNeedsDisplay()
-        track.shoot(danmaku: cell)
+        shootTrack.shoot(danmaku: cell)
     }
     
     func canShoot(danmaku: DanmakuCellModel) -> Bool {
@@ -116,7 +132,58 @@ public extension DanmakuView {
         }) != nil
     }
     
-    func recaculateTrack() {
+    func recaculateTracks() {
+        recaculateFloatingTracks()
+        recaculateTopTracks()
+    }
+    
+    
+    func play() {
+        guard status != .play else { return }
+        floatingTracks.forEach {
+            $0.play()
+        }
+        topTracks.forEach {
+            $0.play()
+        }
+        status = .play
+    }
+    
+    func pause() {
+        guard status != .pause else { return }
+        floatingTracks.forEach {
+            $0.pause()
+        }
+        topTracks.forEach {
+            $0.pause()
+        }
+        status = .pause
+    }
+    
+    func stop() {
+        guard status != .stop else { return }
+        floatingTracks.forEach {
+            $0.stop()
+        }
+        topTracks.forEach {
+            $0.stop()
+        }
+        status = .stop
+    }
+    
+    func update(_ closure: () -> Void) {
+        pause()
+        closure()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            self.play()
+        }
+    }
+    
+}
+
+private extension DanmakuView {
+    
+    func recaculateFloatingTracks() {
         let perHeight = Float((bounds.height - paddingTop - paddingBottom) / trackHeight)
         let trackCount = Int(ceilf(Float(perHeight)))
         let diffFloatingTrackCount = trackCount - floatingTracks.count
@@ -139,29 +206,27 @@ public extension DanmakuView {
         }
     }
     
-    
-    func play() {
-        guard status != .play else { return }
-        floatingTracks.forEach {
-            $0.play()
+    func recaculateTopTracks() {
+        let perHeight = Float((bounds.height - paddingTop - paddingBottom) / trackHeight)
+        let trackCount = Int(ceilf(Float(perHeight)))
+        let diffFloatingTrackCount = trackCount - topTracks.count
+        let startIndex = topTracks.count
+        if diffFloatingTrackCount > 0 {
+            for i in 0..<diffFloatingTrackCount {
+                let track = DanmakuTopTrack(view: self)
+                track.stopClosure = { [weak self] (cell) in
+                    guard let strongSelf = self else { return }
+                    guard let cs = cell.model?.cellClass else { return }
+                    strongSelf.delegate?.danmakuView(strongSelf, didEndDisplaying: cell)
+                    guard var array = strongSelf.danmakuPool[NSStringFromClass(cs)] else { return }
+                    array.append(cell)
+                }
+                track.positionY = CGFloat(startIndex + i) * trackHeight + trackHeight / 2.0 + paddingTop
+                topTracks.append(track)
+            }
+        } else if diffFloatingTrackCount < 0 {
+            topTracks.removeLast(Int(abs(diffFloatingTrackCount)))
         }
-        status = .play
-    }
-    
-    func pause() {
-        guard status != .pause else { return }
-        floatingTracks.forEach {
-            $0.pause()
-        }
-        status = .pause
-    }
-    
-    func stop() {
-        guard status != .stop else { return }
-        floatingTracks.forEach {
-            $0.stop()
-        }
-        status = .stop
     }
     
 }
