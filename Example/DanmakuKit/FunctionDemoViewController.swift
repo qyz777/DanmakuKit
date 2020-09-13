@@ -202,4 +202,9 @@ extension FunctionDemoViewController: DanmakuViewDelegate {
         }
     }
     
+    func danmakuView(_ danmakuView: DanmakuView, didTapped danmaku: DanmakuCell) {
+        guard let cellModel = danmaku.model as? DanmakuTextCellModel else { return }
+        print("tap %@ at tarck %d", cellModel.text, cellModel.track ?? 0)
+    }
+    
 }

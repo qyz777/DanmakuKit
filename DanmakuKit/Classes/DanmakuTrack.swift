@@ -162,7 +162,7 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     
 }
 
-//MARK: DanmakuTopTrack
+//MARK: DanmakuVerticalTrack
 
 class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     

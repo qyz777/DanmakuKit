@@ -33,6 +33,12 @@ public protocol DanmakuViewDelegate: class {
     ///   - danmaku: danmaku
     func danmakuView(_ danmakuView: DanmakuView, didEndDisplaying danmaku: DanmakuCell)
     
+    /// This method is called when danmaku is tapped.
+    /// - Parameters:
+    ///   - danmakuView: view of the danmaku
+    ///   - danmaku: danmaku
+    func danmakuView(_ danmakuView: DanmakuView, didTapped danmaku: DanmakuCell)
+    
 }
 
 public extension DanmakuViewDelegate {
@@ -44,6 +50,8 @@ public extension DanmakuViewDelegate {
     func danmakuView(_ danmakuView: DanmakuView, willDisplay danmaku: DanmakuCell) {}
     
     func danmakuView(_ danmakuView: DanmakuView, didEndDisplaying danmaku: DanmakuCell) {}
+    
+    func danmakuView(_ danmakuView: DanmakuView, didTapped danmaku: DanmakuCell) {}
     
 }
 
@@ -98,7 +106,7 @@ public class DanmakuView: UIView {
     
     private var bottomTracks: [DanmakuTrack] = []
 
-    override public init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         createPoolIfNeed()
         recaculateTracks()
@@ -106,6 +114,24 @@ public class DanmakuView: UIView {
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+    }
+    
+    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        for i in (0..<subviews.count).reversed() {
+            let subView = subviews[i]
+            if subView.layer.animationKeys() != nil, let presentationLayer = subView.layer.presentation() {
+                let newPoint = layer.convert(point, to: presentationLayer)
+                if presentationLayer.contains(newPoint) {
+                    return subView
+                }
+            } else {
+                let newPoint = convert(point, to: subView)
+                if let findView = hitTest(newPoint, with: event) {
+                    return findView
+                }
+            }
+        }
+        return self
     }
 
 }
@@ -127,6 +153,8 @@ public extension DanmakuView {
             let className = NSClassFromString(NSStringFromClass(danmaku.cellClass)) as! DanmakuCell.Type
             findCell = className.init(frame: CGRect(x: bounds.width, y: 0, width: danmaku.size.width, height: danmaku.size.height))
             findCell?.model = danmaku
+            let tap = UITapGestureRecognizer(target: self, action: #selector(danmakuDidTap(_:)))
+            findCell?.addGestureRecognizer(tap)
         } else {
             findCell?.model = danmaku
             delegate?.danmakuView(self, dequeueReusable: findCell!)
@@ -337,6 +365,12 @@ private extension DanmakuView {
             track.index = UInt(i)
             track.positionY = CGFloat(i) * trackHeight + trackHeight / 2.0 + paddingTop + offsetY
         }
+    }
+    
+    @objc
+    func danmakuDidTap(_ tap: UITapGestureRecognizer) {
+        guard let view = tap.view as? DanmakuCell else { return }
+        delegate?.danmakuView(self, didTapped: view)
     }
     
     func createPoolIfNeed() {
