@@ -24,7 +24,7 @@ class Sentinel {
     
 }
 
-fileprivate let pool = DanmakuQueuePool(name: "com.DanmakuKit.DanmakuAsynclayer", queueCount: 16, qos: .userInteractive)
+var pool: DanmakuQueuePool!
 
 class DanmakuAsyncLayer: CALayer {
     

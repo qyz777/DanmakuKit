@@ -15,6 +15,8 @@ protocol DanmakuTrack {
     
     var positionY: CGFloat { get set }
     
+    var index: UInt { get set }
+    
     var stopClosure: ((_ cell: DanmakuCell) -> Void)? { get set }
     
     init(view: UIView)
@@ -39,7 +41,15 @@ let DANMAKU_CELL_KEY = "DANMAKU_CELL_KEY"
 
 class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     
-    var positionY: CGFloat = 0
+    var positionY: CGFloat = 0 {
+        didSet {
+            cells.forEach {
+                $0.layer.position.y = positionY
+            }
+        }
+    }
+    
+    var index: UInt = 0
     
     var stopClosure: ((_ cell: DanmakuCell) -> Void)?
     
@@ -52,10 +62,11 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     }
     
     func shoot(danmaku: DanmakuCell) {
+        cells.append(danmaku)
         danmaku.layer.position = CGPoint(x: view!.bounds.width + danmaku.bounds.width / 2.0, y: positionY)
+        danmaku.model?.track = index
         prepare(danmaku: danmaku)
         addAnimation(to: danmaku)
-        cells.append(danmaku)
     }
     
     func canShoot(danmaku: DanmakuCellModel) -> Bool {
@@ -155,7 +166,13 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
 
 class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     
-    var positionY: CGFloat = 0
+    var positionY: CGFloat = 0 {
+        didSet {
+            cell?.layer.position.y = positionY
+        }
+    }
+    
+    var index: UInt = 0
     
     var stopClosure: ((_ cell: DanmakuCell) -> Void)?
     
@@ -170,6 +187,7 @@ class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     func shoot(danmaku: DanmakuCell) {
         cell = danmaku
         danmaku.layer.position = CGPoint(x: view!.bounds.width / 2.0, y: positionY)
+        danmaku.model?.track = index
         prepare(danmaku: danmaku)
         addAnimation(to: danmaku)
     }
