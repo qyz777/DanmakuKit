@@ -25,9 +25,11 @@ class FunctionDemoViewController: UIViewController {
         view.addSubview(pauseButton)
         view.addSubview(stopButton)
         view.addSubview(changeSpeedLabel)
-        view.addSubview(changeSpeedSlder)
+        view.addSubview(changeSpeedSlider)
         view.addSubview(changeHeightLabel)
-        view.addSubview(changeHeightSlder)
+        view.addSubview(changeHeightSlider)
+        view.addSubview(changeAreaLabel)
+        view.addSubview(changeAreaSlider)
         
         danmakuView.frame.origin.y = 100
         playButton.sizeToFit()
@@ -35,25 +37,31 @@ class FunctionDemoViewController: UIViewController {
         stopButton.sizeToFit()
         
         playButton.center.x = SCREEN_WIDTH / 2.0
-        playButton.frame.origin.y = 500
+        playButton.frame.origin.y = 350
         
         pauseButton.center.x = SCREEN_WIDTH / 2.0
-        pauseButton.frame.origin.y = 530
+        pauseButton.frame.origin.y = 380
         
         stopButton.center.x = SCREEN_WIDTH / 2.0
-        stopButton.frame.origin.y = 560
+        stopButton.frame.origin.y = 410
         
         changeSpeedLabel.sizeToFit()
-        changeSpeedLabel.frame.origin.y = 600
+        changeSpeedLabel.frame.origin.y = 440
         changeSpeedLabel.frame.origin.x = SCREEN_WIDTH / 2.0 - 40 - changeSpeedLabel.frame.width
-        changeSpeedSlder.frame.origin.y = changeSpeedLabel.frame.minY
-        changeSpeedSlder.frame.origin.x = changeSpeedLabel.frame.maxX + 15
+        changeSpeedSlider.frame.origin.y = changeSpeedLabel.frame.minY
+        changeSpeedSlider.frame.origin.x = changeSpeedLabel.frame.maxX + 15
         
         changeHeightLabel.sizeToFit()
-        changeHeightLabel.frame.origin.y = 650
+        changeHeightLabel.frame.origin.y = 470
         changeHeightLabel.frame.origin.x = SCREEN_WIDTH / 2.0 - 40 - changeHeightLabel.frame.width
-        changeHeightSlder.frame.origin.y = changeHeightLabel.frame.minY
-        changeHeightSlder.frame.origin.x = changeHeightLabel.frame.maxX + 15
+        changeHeightSlider.frame.origin.y = changeHeightLabel.frame.minY
+        changeHeightSlider.frame.origin.x = changeHeightLabel.frame.maxX + 15
+        
+        changeAreaLabel.sizeToFit()
+        changeAreaLabel.frame.origin.y = 500
+        changeAreaLabel.frame.origin.x = SCREEN_WIDTH / 2.0 - 40 - changeAreaLabel.frame.width
+        changeAreaSlider.frame.origin.y = changeAreaLabel.frame.minY
+        changeAreaSlider.frame.origin.x = changeAreaLabel.frame.maxX + 15
     }
     
     private let contents: [String] = [
@@ -83,7 +91,7 @@ class FunctionDemoViewController: UIViewController {
     @objc
     func play() {
         if timer == nil {
-            timer = Timer(timeInterval:0.3, target: self, selector: #selector(sendDanmaku), userInfo: nil, repeats: true)
+            timer = Timer(timeInterval:0.5, target: self, selector: #selector(sendDanmaku), userInfo: nil, repeats: true)
         }
         guard let timer = timer else { return }
         RunLoop.main.add(timer, forMode: .commonModes)
@@ -123,13 +131,21 @@ class FunctionDemoViewController: UIViewController {
         }
     }
     
+    @objc
+    func changeArea(_ sender: UISlider) {
+        danmakuView.update { [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.danmakuView.displayArea = CGFloat(sender.value)
+        }
+    }
+    
     func randomIntNumber(lower: Int = 0,upper: Int = Int(UInt32.max)) -> Int {
         return lower + Int(arc4random_uniform(UInt32(upper - lower)))
     }
     
     lazy var danmakuView: DanmakuView = {
         let view = DanmakuView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH
-        , height: 300))
+        , height: 250))
         view.backgroundColor = .blue
         view.delegate = self
         return view
@@ -166,7 +182,7 @@ class FunctionDemoViewController: UIViewController {
         return view
     }()
     
-    lazy var changeSpeedSlder: UISlider = {
+    lazy var changeSpeedSlider: UISlider = {
         let view = UISlider(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH / 2.0, height: 20))
         view.minimumValue = 5
         view.maximumValue = 10
@@ -182,12 +198,28 @@ class FunctionDemoViewController: UIViewController {
         return view
     }()
     
-    lazy var changeHeightSlder: UISlider = {
+    lazy var changeHeightSlider: UISlider = {
         let view = UISlider(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH / 2.0, height: 20))
         view.minimumValue = 15
         view.maximumValue = 30
         view.value = 20
         view.addTarget(self, action: #selector(changeHeight(_:)), for: .touchUpInside)
+        return view
+    }()
+    
+    lazy var changeAreaLabel: UILabel = {
+        let view = UILabel()
+        view.text = "change display area"
+        view.textColor = .black
+        return view
+    }()
+    
+    lazy var changeAreaSlider: UISlider = {
+        let view = UISlider(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH / 2.0, height: 20))
+        view.minimumValue = 0
+        view.maximumValue = 1
+        view.value = 1
+        view.addTarget(self, action: #selector(changeArea(_:)), for: .touchUpInside)
         return view
     }()
 
