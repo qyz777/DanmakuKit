@@ -63,8 +63,10 @@ class FunctionDemoViewController: UIViewController {
         cellModel.text = contents[index]
         cellModel.id = String(arc4random())
         cellModel.calculateSize()
-        if randomIntNumber(lower: 0, upper: 10) < 5 {
+        if randomIntNumber(lower: 0, upper: 20) <= 5 {
             cellModel.type = .top
+        } else if randomIntNumber(lower: 0, upper: 20) >= 15 {
+            cellModel.type = .bottom
         }
         danmakuView.shoot(danmaku: cellModel)
         danmakus.append(cellModel)

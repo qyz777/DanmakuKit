@@ -153,7 +153,7 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
 
 //MARK: DanmakuTopTrack
 
-class DanmakuTopTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
+class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     
     var positionY: CGFloat = 0
     
