@@ -316,6 +316,7 @@ private extension DanmakuView {
             var track = floatingTracks[i]
             track.stopClosure = { [weak self] (cell) in
                 guard let strongSelf = self else { return }
+                guard strongSelf.enableCellReusable else { return }
                 guard let cs = cell.model?.cellClass else { return }
                 strongSelf.delegate?.danmakuView(strongSelf, didEndDisplaying: cell)
                 guard var array = strongSelf.danmakuPool[NSStringFromClass(cs)] else { return }
@@ -344,6 +345,7 @@ private extension DanmakuView {
             var track = topTracks[i]
             track.stopClosure = { [weak self] (cell) in
                 guard let strongSelf = self else { return }
+                guard strongSelf.enableCellReusable else { return }
                 guard let cs = cell.model?.cellClass else { return }
                 strongSelf.delegate?.danmakuView(strongSelf, didEndDisplaying: cell)
                 guard var array = strongSelf.danmakuPool[NSStringFromClass(cs)] else { return }
@@ -372,6 +374,7 @@ private extension DanmakuView {
             var track = bottomTracks[i]
             track.stopClosure = { [weak self] (cell) in
                 guard let strongSelf = self else { return }
+                guard strongSelf.enableCellReusable else { return }
                 guard let cs = cell.model?.cellClass else { return }
                 strongSelf.delegate?.danmakuView(strongSelf, didEndDisplaying: cell)
                 guard var array = strongSelf.danmakuPool[NSStringFromClass(cs)] else { return }
