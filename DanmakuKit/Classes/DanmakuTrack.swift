@@ -168,7 +168,7 @@ class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     
     var positionY: CGFloat = 0 {
         didSet {
-            cell?.layer.position.y = positionY
+            cell?.layer.position = CGPoint(x: view!.bounds.width / 2.0, y: positionY)
         }
     }
     
