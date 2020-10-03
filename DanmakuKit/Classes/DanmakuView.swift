@@ -141,12 +141,12 @@ public class DanmakuView: UIView {
                 }
             } else {
                 let newPoint = convert(point, to: subView)
-                if let findView = hitTest(newPoint, with: event) {
+                if let findView = subView.hitTest(newPoint, with: event) {
                     return findView
                 }
             }
         }
-        return self
+        return nil
     }
 
 }
