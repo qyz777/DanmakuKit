@@ -27,7 +27,7 @@ class DanmakuTextCell: DanmakuCell {
     override func displaying(_ context: CGContext, _ size: CGSize, _ isCancelled: Bool) {
         guard let model = model as? DanmakuTextCellModel else { return }
         let text = NSString(string: model.text)
-        let attributes: [NSAttributedStringKey: Any] = [.font: model.font, .foregroundColor: UIColor.red]
+        let attributes: [NSAttributedString.Key: Any] = [.font: model.font, .foregroundColor: UIColor.red]
         text.draw(at: .zero, withAttributes: attributes)
     }
     

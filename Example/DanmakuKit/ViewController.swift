@@ -18,6 +18,10 @@ class ViewController: UIViewController {
         view.addSubview(tableView)
     }
     
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
+    
     lazy var tableView: UITableView = {
         let view = UITableView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT))
         view.delegate = self
@@ -48,7 +52,22 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.row == 0 {
             let vc = FunctionDemoViewController()
             navigationController?.pushViewController(vc, animated: true)
+        } else if indexPath.row == 1 {
+            let vc = PlayerDemoViewController()
+            navigationController?.pushViewController(vc, animated: true)
         }
+    }
+    
+}
+
+class NavigationController: UINavigationController {
+    
+    override var shouldAutorotate: Bool {
+        return false
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
     }
     
 }

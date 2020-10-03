@@ -94,7 +94,7 @@ class FunctionDemoViewController: UIViewController {
             timer = Timer(timeInterval:0.5, target: self, selector: #selector(sendDanmaku), userInfo: nil, repeats: true)
         }
         guard let timer = timer else { return }
-        RunLoop.main.add(timer, forMode: .commonModes)
+        RunLoop.main.add(timer, forMode: .common)
         danmakuView.play()
     }
     

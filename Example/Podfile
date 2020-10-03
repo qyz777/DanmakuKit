@@ -2,6 +2,9 @@ use_frameworks!
 
 target 'DanmakuKit_Example' do
   pod 'DanmakuKit', :path => '../'
+  
+  pod 'KVOController', '1.2.0'
+  pod 'DeviceKit', '~> 4.0'
 
   target 'DanmakuKit_Tests' do
     inherit! :search_paths
