@@ -74,7 +74,7 @@ class FunctionDemoViewController: UIViewController {
     @objc
     func sendDanmaku() {
         let index = randomIntNumber(lower: 0, upper: contents.count)
-        let cellModel = DanmakuTextCellModel()
+        let cellModel = DanmakuTextCellModel(json: nil)
         cellModel.displayTime = displayTime
         cellModel.text = contents[index]
         cellModel.id = String(arc4random())
@@ -146,7 +146,7 @@ class FunctionDemoViewController: UIViewController {
     lazy var danmakuView: DanmakuView = {
         let view = DanmakuView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH
         , height: 250))
-        view.backgroundColor = .blue
+        view.backgroundColor = .black
         view.delegate = self
         return view
     }()

@@ -32,7 +32,11 @@ public protocol PlayerViewDelegate: class {
     
 }
 
-extension PlayerViewDelegate {
+public extension PlayerViewDelegate {
+    
+    func player(_ player: PlayerView, playAt time: Double) {}
+    
+    func player(_ player: PlayerView, didLoadVideoWith duration: Double) {}
     
     func player(_ player: PlayerView, loadVideoFailWith error: String) {}
     

@@ -27,7 +27,16 @@ class DanmakuTextCell: DanmakuCell {
     override func displaying(_ context: CGContext, _ size: CGSize, _ isCancelled: Bool) {
         guard let model = model as? DanmakuTextCellModel else { return }
         let text = NSString(string: model.text)
-        let attributes: [NSAttributedString.Key: Any] = [.font: model.font, .foregroundColor: UIColor.red]
+        context.setLineWidth(1)
+        context.setLineJoin(.round)
+        context.setStrokeColor(UIColor.white.cgColor)
+        context.saveGState()
+        context.setTextDrawingMode(.stroke)
+        let attributes: [NSAttributedString.Key: Any] = [.font: model.font, .foregroundColor: UIColor.white]
+        text.draw(at: .zero, withAttributes: attributes)
+        context.restoreGState()
+        
+        context.setTextDrawingMode(.fill)
         text.draw(at: .zero, withAttributes: attributes)
     }
     

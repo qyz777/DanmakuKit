@@ -5,6 +5,7 @@ target 'DanmakuKit_Example' do
   
   pod 'KVOController', '1.2.0'
   pod 'DeviceKit', '~> 4.0'
+  pod 'SwiftyJSON', '~> 4.0'
 
   target 'DanmakuKit_Tests' do
     inherit! :search_paths

@@ -2,16 +2,19 @@ PODS:
   - DanmakuKit (0.1.0)
   - DeviceKit (4.1.0)
   - KVOController (1.2.0)
+  - SwiftyJSON (4.3.0)
 
 DEPENDENCIES:
   - DanmakuKit (from `../`)
   - DeviceKit (~> 4.0)
   - KVOController (= 1.2.0)
+  - SwiftyJSON (~> 4.0)
 
 SPEC REPOS:
   trunk:
     - DeviceKit
     - KVOController
+    - SwiftyJSON
 
 EXTERNAL SOURCES:
   DanmakuKit:
@@ -21,7 +24,8 @@ SPEC CHECKSUMS:
   DanmakuKit: e78aa392e35ddf4e95d3e22c6c74ae956e09b25a
   DeviceKit: aaa4743a15ef1e2021fe654dffa32a3ed15672aa
   KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
+  SwiftyJSON: 6faa0040f8b59dead0ee07436cbf76b73c08fd08
 
-PODFILE CHECKSUM: 79ab95cd73dce05a6fa46aa17abd8404833d4fcc
+PODFILE CHECKSUM: 027875af4031256291caa8019239b505d2ee8836
 
 COCOAPODS: 1.8.4

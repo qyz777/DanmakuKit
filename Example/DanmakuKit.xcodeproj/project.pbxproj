@@ -22,6 +22,8 @@
 		A0A0EB55252568290078080E /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A0EB54252568290078080E /* PlayerView.swift */; };
 		A0A0EB5725256A320078080E /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A0EB5625256A320078080E /* PlayerViewController.swift */; };
 		A0A0EB5925256B880078080E /* demo.MOV in Resources */ = {isa = PBXBuildFile; fileRef = A0A0EB5825256B880078080E /* demo.MOV */; };
+		A0A0EB5B252896C00078080E /* danmaku.json in Resources */ = {isa = PBXBuildFile; fileRef = A0A0EB5A252896C00078080E /* danmaku.json */; };
+		A0A0EB5D252896D00078080E /* DanmakuService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A0EB5C252896D00078080E /* DanmakuService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +59,8 @@
 		A0A0EB54252568290078080E /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		A0A0EB5625256A320078080E /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		A0A0EB5825256B880078080E /* demo.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = demo.MOV; sourceTree = "<group>"; };
+		A0A0EB5A252896C00078080E /* danmaku.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = danmaku.json; sourceTree = "<group>"; };
+		A0A0EB5C252896D00078080E /* DanmakuService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuService.swift; sourceTree = "<group>"; };
 		AA16C3617F09A2E85304E8B9 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		CA5BFE3043DC2B7C09EDCE06 /* Pods-DanmakuKit_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DanmakuKit_Tests.debug.xcconfig"; path = "Target Support Files/Pods-DanmakuKit_Tests/Pods-DanmakuKit_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		CDB672DA59492FFD0B896F83 /* Pods-DanmakuKit_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DanmakuKit_Example.debug.xcconfig"; path = "Target Support Files/Pods-DanmakuKit_Example/Pods-DanmakuKit_Example.debug.xcconfig"; sourceTree = "<group>"; };
@@ -119,7 +123,8 @@
 				A0A0EB52252567B00078080E /* PlayerDemoViewController.swift */,
 				A0A0EB54252568290078080E /* PlayerView.swift */,
 				A0A0EB5625256A320078080E /* PlayerViewController.swift */,
-				A0A0EB5825256B880078080E /* demo.MOV */,
+				A0A0EB5C252896D00078080E /* DanmakuService.swift */,
+				A0A0EB5E252896D80078080E /* Resource */,
 			);
 			name = "Example for DanmakuKit";
 			path = DanmakuKit;
@@ -178,6 +183,15 @@
 				1D101944CD8F2023168DF50E /* Pods_DanmakuKit_Tests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A0A0EB5E252896D80078080E /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				A0A0EB5A252896C00078080E /* danmaku.json */,
+				A0A0EB5825256B880078080E /* demo.MOV */,
+			);
+			name = Resource;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -272,6 +286,7 @@
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				A0A0EB5925256B880078080E /* demo.MOV in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
+				A0A0EB5B252896C00078080E /* danmaku.json in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -340,12 +355,14 @@
 				"${BUILT_PRODUCTS_DIR}/DanmakuKit/DanmakuKit.framework",
 				"${BUILT_PRODUCTS_DIR}/DeviceKit/DeviceKit.framework",
 				"${BUILT_PRODUCTS_DIR}/KVOController/KVOController.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DanmakuKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DeviceKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KVOController.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -361,6 +378,7 @@
 			files = (
 				A0A0EB53252567B00078080E /* PlayerDemoViewController.swift in Sources */,
 				A0A0EB5725256A320078080E /* PlayerViewController.swift in Sources */,
+				A0A0EB5D252896D00078080E /* DanmakuService.swift in Sources */,
 				A076E08524FA80C800A8FC06 /* DanmakuTextCellModel.swift in Sources */,
 				A0A0EB55252568290078080E /* PlayerView.swift in Sources */,
 				A076E08724FB79B300A8FC06 /* FunctionDemoViewController.swift in Sources */,

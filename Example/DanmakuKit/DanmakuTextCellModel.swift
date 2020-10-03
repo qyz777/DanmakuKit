@@ -8,14 +8,17 @@
 
 import Foundation
 import DanmakuKit
+import SwiftyJSON
 
-class DanmakuTextCellModel: DanmakuCellModel {
+class DanmakuTextCellModel: DanmakuCellModel, Equatable {
     
     var id = ""
     
     var text = ""
     
     var font = UIFont.systemFont(ofSize: 15)
+    
+    var offsetTime: TimeInterval = 0
     
     var cellClass: DanmakuCell.Type {
         return DanmakuTextCell.self
@@ -38,6 +41,22 @@ class DanmakuTextCellModel: DanmakuCellModel {
     
     static func == (lhs: DanmakuTextCellModel, rhs: DanmakuTextCellModel) -> Bool {
         return lhs.id == rhs.id
+    }
+    
+    init(json: JSON?) {
+        guard let json = json else { return }
+        text = json["text"].stringValue
+        switch json["type"].intValue {
+        case 0:
+            type = .floating
+        case 1:
+            type = .top
+        case 2:
+            type = .bottom
+        default:
+            type = .floating
+        }
+        offsetTime = json["offset_time"].doubleValue
     }
     
 }

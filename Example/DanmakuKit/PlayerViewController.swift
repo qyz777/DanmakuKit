@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import DanmakuKit
 
 //MARK: PlayerViewController
 
@@ -23,6 +24,8 @@ class PlayerViewController: UIViewController {
     private var lastOrientation: UIDeviceOrientation = .portrait
     
     public private(set) var isFullScreen: Bool = false
+    
+    public var danmakuArray: [DanmakuTextCellModel] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,12 +33,24 @@ class PlayerViewController: UIViewController {
         view.addSubview(playr)
         playr.frame = view.bounds
         
+        view.addSubview(danmakuView)
+        danmakuView.frame = view.bounds
+        
         NotificationCenter.default.addObserver(self, selector: #selector(deviceOrientationDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
+        
+        danmakuService.request { [weak self] (json) in
+            guard let strongSelf = self else { return }
+            strongSelf.danmakuArray = json["data"].arrayValue.map({ (json) -> DanmakuTextCellModel in
+                return DanmakuTextCellModel(json: json)
+            })
+        }
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         playr.frame = view.bounds
+        danmakuView.frame = view.bounds
+        danmakuView.recaculateTracks()
     }
     
     //MARK: Notification
@@ -73,6 +88,7 @@ class PlayerViewController: UIViewController {
             self.view.transform = .identity
             self.view.frame = rootViewController.view.bounds
             self.view.setNeedsLayout()
+            self.danmakuView.recaculateTracks()
             self.isFullScreen = true
         }
     }
@@ -97,6 +113,7 @@ class PlayerViewController: UIViewController {
             self.view.transform = .identity
             self.view.frame = self.originalFrame
             self.view.setNeedsLayout()
+            self.danmakuView.recaculateTracks()
             self.isFullScreen = false
             self.originalWindow?.makeKeyAndVisible()
             self.originalParent = nil
@@ -108,7 +125,18 @@ class PlayerViewController: UIViewController {
     
     public lazy var playr: PlayerView = {
         let p = PlayerView()
+        p.delegate = self
         return p
+    }()
+    
+    private lazy var danmakuService: DanmakuService = {
+        let s = DanmakuService()
+        return s
+    }()
+    
+    private lazy var danmakuView: DanmakuView = {
+        let danmakuView = DanmakuView(frame: view.bounds)
+        return danmakuView
     }()
 
 }
@@ -141,6 +169,37 @@ extension PlayerViewController {
         willMove(toParent: nil)
         view.removeFromSuperview()
         removeFromParent()
+    }
+    
+}
+
+extension PlayerViewController: PlayerViewDelegate {
+    
+    func player(_ player: PlayerView, playAt time: Double) {
+        var array: [DanmakuTextCellModel] = []
+        for cm in danmakuArray {
+            if cm.offsetTime <= time {
+                array.append(cm)
+            } else {
+                break
+            }
+        }
+        danmakuArray.removeFirst(array.count)
+        array.forEach {
+            $0.calculateSize()
+            danmakuView.shoot(danmaku: $0)
+        }
+    }
+    
+    func player(_ player: PlayerView, statusDidChange status: PlayerViewStatus) {
+        switch status {
+        case .playing:
+            danmakuView.play()
+        case .pause:
+            danmakuView.pause()
+        case .stop, .error, .unknown:
+            danmakuView.stop()
+        }
     }
     
 }
