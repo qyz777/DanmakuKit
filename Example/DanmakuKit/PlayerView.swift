@@ -65,8 +65,6 @@ public class PlayerView: UIView {
     public init() {
         super.init(frame: .zero)
         backgroundColor = .black
-        let tap = UITapGestureRecognizer(target: self, action: #selector(didTapPlayer))
-        addGestureRecognizer(tap)
     }
     
     required init?(coder: NSCoder) {
@@ -96,15 +94,6 @@ public class PlayerView: UIView {
         status = .pause
         delegate?.player(self, statusDidChange: status)
         delegate?.playerDidPlayToEndTime(self)
-    }
-    
-    @objc
-    func didTapPlayer() {
-        if status == .pause || status == .stop {
-            play()
-        } else {
-            pause()
-        }
     }
     
     private func updatePlayerItem(_ item: AVPlayerItem) {

@@ -27,6 +27,7 @@ class ViewController: UIViewController {
         view.delegate = self
         view.dataSource = self
         view.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        view.tableFooterView = UIView()
         return view
     }()
 
@@ -49,6 +50,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.row == 0 {
             let vc = FunctionDemoViewController()
             navigationController?.pushViewController(vc, animated: true)

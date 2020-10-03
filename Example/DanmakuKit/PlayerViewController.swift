@@ -31,12 +31,16 @@ class PlayerViewController: UIViewController {
         super.viewDidLoad()
 
         view.addSubview(playr)
-        playr.frame = view.bounds
-        
+        view.addSubview(coverView)
+        coverView.addSubview(scaleButton)
+        coverView.addSubview(playButton)
+        coverView.addSubview(pauseButton)
         view.addSubview(danmakuView)
-        danmakuView.frame = view.bounds
         
         NotificationCenter.default.addObserver(self, selector: #selector(deviceOrientationDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(didTapPlayer))
+        view.addGestureRecognizer(tap)
         
         danmakuService.request { [weak self] (json) in
             guard let strongSelf = self else { return }
@@ -44,13 +48,66 @@ class PlayerViewController: UIViewController {
                 return DanmakuTextCellModel(json: json)
             })
         }
+        
+        showCoverView()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         playr.frame = view.bounds
         danmakuView.frame = view.bounds
+        coverView.frame = view.bounds
         danmakuView.recaculateTracks()
+        
+        scaleButton.bounds.size = CGSize(width: 40, height: 40)
+        scaleButton.frame.origin = CGPoint(x: coverView.bounds.width - scaleButton.bounds.width - 15, y: coverView.bounds.height - scaleButton.bounds.height - 15)
+        
+        playButton.sizeToFit()
+        playButton.center = CGPoint(x: coverView.bounds.width / 2.0, y: coverView.bounds.height / 2.0)
+        
+        pauseButton.sizeToFit()
+        pauseButton.center = CGPoint(x: coverView.bounds.width / 2.0, y: coverView.bounds.height / 2.0)
+    }
+    
+    //MARK: Action
+    
+    @objc
+    func didTapPlayer() {
+        showCoverView()
+    }
+    
+    @objc
+    func didClickScaleButton() {
+        if isFullScreen {
+            leaveFullScreen()
+            lastOrientation = UIDevice.current.orientation == .portrait ? .landscapeRight : UIDevice.current.orientation
+        } else {
+            enterFullScreen()
+            lastOrientation = .landscapeLeft
+        }
+    }
+    
+    @objc
+    func didClickPlayButton() {
+        play()
+        hideCoverViewAfterDelay()
+    }
+    
+    @objc
+    func didClickPauseButton() {
+        pause()
+        hideCoverViewAfterDelay()
+    }
+    
+    @objc
+    func hideCoverView() {
+        coverView.alpha = 1
+        UIView.animate(withDuration: 0.25, animations: {
+            self.coverView.alpha = 0
+        }) { (flag) in
+            self.coverView.alpha = 1
+            self.coverView.isHidden = true
+        }
     }
     
     //MARK: Notification
@@ -77,7 +134,7 @@ class PlayerViewController: UIViewController {
         fullScreenWindow?.rootViewController = rootViewController
         fullScreenWindow?.makeKeyAndVisible()
         
-        let angle = UIDevice.current.orientation == .landscapeLeft ? CGFloat.pi / 2 : -CGFloat.pi / 2
+        let angle = UIDevice.current.orientation == .landscapeRight ? -CGFloat.pi / 2 : CGFloat.pi / 2
         
         UIView.animate(withDuration: 0.35, animations: {
             self.view.transform = CGAffineTransform(rotationAngle: angle)
@@ -102,7 +159,7 @@ class PlayerViewController: UIViewController {
         let convertOrigin = parent?.view.convert(originalFrame.origin, to: view.superview) ?? .zero
         let origin = lastOrientation == .landscapeLeft ? CGPoint(x: convertOrigin.y, y: convertOrigin.x) : CGPoint(x: superViewWidth - convertOrigin.y - originalFrame.height
             , y: superViewHeight - convertOrigin.x - originalFrame.width)
-        let angle = lastOrientation == .landscapeLeft ? -CGFloat.pi / 2 : CGFloat.pi / 2
+        let angle = lastOrientation == .landscapeRight ? CGFloat.pi / 2 : -CGFloat.pi / 2
         
         UIView.animate(withDuration: 0.35, animations: {
             self.view.transform = CGAffineTransform(rotationAngle: angle)
@@ -121,6 +178,22 @@ class PlayerViewController: UIViewController {
         }
     }
     
+    private func showCoverView() {
+        hideCoverViewAfterDelay()
+        guard coverView.isHidden else { return }
+        coverView.alpha = 0
+        coverView.isHidden = false
+        UIView.animate(withDuration: 0.25) {
+            self.coverView.alpha = 1
+        }
+    }
+    
+    private func hideCoverViewAfterDelay() {
+        NSObject.cancelPreviousPerformRequests(withTarget: self
+        , selector: #selector(hideCoverView), object: nil)
+        perform(#selector(hideCoverView), with: nil, afterDelay: 3, inModes: [.common])
+    }
+    
     //MARK: Getter
     
     public lazy var playr: PlayerView = {
@@ -137,6 +210,35 @@ class PlayerViewController: UIViewController {
     private lazy var danmakuView: DanmakuView = {
         let danmakuView = DanmakuView(frame: view.bounds)
         return danmakuView
+    }()
+    
+    private lazy var scaleButton: UIButton = {
+        let view = UIButton(type: .custom)
+        view.setImage(UIImage(named: "player_scale"), for: .normal)
+        view.addTarget(self, action: #selector(didClickScaleButton), for: .touchUpInside)
+        view.backgroundColor = UIColor(white: 0, alpha: 0.5)
+        view.layer.cornerRadius = 20
+        return view
+    }()
+    
+    private lazy var coverView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    private lazy var playButton: UIButton = {
+        let view = UIButton(type: .custom)
+        view.setImage(UIImage(named: "player_play"), for: .normal)
+        view.addTarget(self, action: #selector(didClickPlayButton), for: .touchUpInside)
+        return view
+    }()
+    
+    private lazy var pauseButton: UIButton = {
+        let view = UIButton(type: .custom)
+        view.setImage(UIImage(named: "player_pause"), for: .normal)
+        view.addTarget(self, action: #selector(didClickPauseButton), for: .touchUpInside)
+        view.isHidden = true
+        return view
     }()
 
 }
@@ -195,10 +297,16 @@ extension PlayerViewController: PlayerViewDelegate {
         switch status {
         case .playing:
             danmakuView.play()
+            playButton.isHidden = true
+            pauseButton.isHidden = false
         case .pause:
             danmakuView.pause()
+            playButton.isHidden = false
+            pauseButton.isHidden = true
         case .stop, .error, .unknown:
             danmakuView.stop()
+            playButton.isHidden = false
+            pauseButton.isHidden = true
         }
     }
     
