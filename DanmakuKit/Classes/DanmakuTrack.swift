@@ -155,7 +155,7 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
         animation.fromValue = NSNumber(value: Float(danmaku.layer.position.x))
         animation.toValue = NSNumber(value: Float(-danmaku.bounds.width / 2.0))
         animation.isRemovedOnCompletion = false
-        animation.fillMode = kCAFillModeForwards
+        animation.fillMode = .forwards
         animation.setValue(danmaku, forKey: DANMAKU_CELL_KEY)
         danmaku.layer.add(animation, forKey: FLOATING_ANIMATION_KEY)
     }
@@ -235,7 +235,7 @@ class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
         animation.fromValue = 1
         animation.toValue = 0
         animation.isRemovedOnCompletion = false
-        animation.fillMode = kCAFillModeForwards
+        animation.fillMode = .forwards
         animation.setValue(danmaku, forKey: DANMAKU_CELL_KEY)
         danmaku.layer.add(animation, forKey: TOP_ANIMATION_KEY)
     }
