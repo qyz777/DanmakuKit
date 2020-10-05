@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'DanmakuKit'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of DanmakuKit.'
+  s.summary          = 'DanmakuKit is a tool for rapid development of danmaku functions.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,25 +18,17 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+  DanmakuKit is a high performance danmaku framework that you can use to customize your own unique danmaku style. It provides an asynchronous and synchronous way for you to draw a danmaku. And it provides three types of danmaku: floating, roof screens and floor screens.
                        DESC
 
   s.homepage         = 'https://github.com/qyz777/DanmakuKit'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'qyz777' => '178159283@qq.com' }
+  s.author           = { 'qyz777' => 'qyizhong1998@gmail.com' }
   s.source           = { :git => 'https://github.com/qyz777/DanmakuKit.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '9.0'
+  s.swift_versions = ['5.0']
 
   s.source_files = 'DanmakuKit/Classes/**/*'
   
-  # s.resource_bundles = {
-  #   'DanmakuKit' => ['DanmakuKit/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end
