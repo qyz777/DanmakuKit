@@ -1,28 +1,60 @@
 # DanmakuKit
 
-[![CI Status](https://img.shields.io/travis/qyz777/DanmakuKit.svg?style=flat)](https://travis-ci.org/qyz777/DanmakuKit)
 [![Version](https://img.shields.io/cocoapods/v/DanmakuKit.svg?style=flat)](https://cocoapods.org/pods/DanmakuKit)
 [![License](https://img.shields.io/cocoapods/l/DanmakuKit.svg?style=flat)](https://cocoapods.org/pods/DanmakuKit)
 [![Platform](https://img.shields.io/cocoapods/p/DanmakuKit.svg?style=flat)](https://cocoapods.org/pods/DanmakuKit)
 
+## Introduction
+
+DanmakuKit is a high performance library that provides the basic functions of danmaku. It provides a set of processes that allow you to generate the danmaku cell via cellModel, and each danmaku can be drawn either synchronously or asynchronously. 
+
+As shown in the GIF below, DanmakuKit offers three types of danmaku launch: floating, top and bottom.
+
+![Demo_0](./Images/demo_0.gif) 
+
+![Demo_1](./Images/demo_1.gif)
+
+
+
+### Supported features
+
+✅Speed adjustment
+
+✅Track height adjustment
+
+✅Display area adjustment
+
+✅Click callback
+
+### TODO
+
+If you have any requirements that you want DanmakuKit to provide, you can raise issue.
+
+* Support to suspend a single danmaku
+* Support for setting progress property to render the danmaku immediately on the view.
+* Provides property to specify whether danmaku can overlap.
+
 ## Example
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+For detailed usage, see the Example project, which provides a functional demonstration and an example of using it with a player. 
 
 ## Requirements
 
+swift 5.0+
+
+iOS 9.0+
+
 ## Installation
 
-DanmakuKit is available through [CocoaPods](https://cocoapods.org). To install
-it, simply add the following line to your Podfile:
+DanmakuKit is available through [CocoaPods](https://cocoapods.org). To install it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'DanmakuKit'
+pod 'DanmakuKit', '~> 0.1.0'
 ```
 
 ## Author
 
-qyz777, 178159283@qq.com
+qyz777, qyizhong1998@gmail.com
 
 ## License
 
