@@ -132,6 +132,8 @@ public class DanmakuView: UIView {
     }
     
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        guard self.point(inside: point, with: event) else { return nil }
+        
         for i in (0..<subviews.count).reversed() {
             let subView = subviews[i]
             if subView.layer.animationKeys() != nil, let presentationLayer = subView.layer.presentation() {
@@ -165,8 +167,10 @@ public extension DanmakuView {
         }
         
         if findCell == nil {
-            let className = NSClassFromString(NSStringFromClass(danmaku.cellClass)) as! DanmakuCell.Type
-            findCell = className.init(frame: CGRect(x: bounds.width, y: 0, width: danmaku.size.width, height: danmaku.size.height))
+            guard let cls = NSClassFromString(NSStringFromClass(danmaku.cellClass)) as? DanmakuCell.Type else {
+                assert(false, "Launched Danmaku must inherit from DanmakuCell!")
+            }
+            findCell = cls.init(frame: CGRect(x: bounds.width, y: 0, width: danmaku.size.width, height: danmaku.size.height))
             findCell?.model = danmaku
             let tap = UITapGestureRecognizer(target: self, action: #selector(danmakuDidTap(_:)))
             findCell?.addGestureRecognizer(tap)
@@ -281,6 +285,42 @@ public extension DanmakuView {
             $0.stop()
         }
         status = .stop
+    }
+    
+    @discardableResult
+    func play(_ danmaku: DanmakuCellModel) -> Bool {
+        var track = floatingTracks.first { (t) -> Bool in
+            return t.play(danmaku)
+        }
+        if track == nil {
+            track = topTracks.first(where: { (t) -> Bool in
+                return t.play(danmaku)
+            })
+        }
+        if track == nil {
+            track = bottomTracks.first(where: { (t) -> Bool in
+                return t.play(danmaku)
+            })
+        }
+        return track != nil
+    }
+    
+    @discardableResult
+    func pause(_ danmaku: DanmakuCellModel) -> Bool {
+        var track = floatingTracks.first { (t) -> Bool in
+            return t.pause(danmaku)
+        }
+        if track == nil {
+            track = topTracks.first(where: { (t) -> Bool in
+                return t.pause(danmaku)
+            })
+        }
+        if track == nil {
+            track = bottomTracks.first(where: { (t) -> Bool in
+                return t.pause(danmaku)
+            })
+        }
+        return track != nil
     }
     
     /// When you change some properties of the danmakuView or cellModel that might affect the danmaku, you must make changes in the closure of this method.

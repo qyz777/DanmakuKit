@@ -12,7 +12,7 @@ import SwiftyJSON
 
 class DanmakuTextCellModel: DanmakuCellModel, Equatable {
     
-    var id = ""
+    var identifier = ""
     
     var text = ""
     
@@ -24,8 +24,6 @@ class DanmakuTextCellModel: DanmakuCellModel, Equatable {
         return DanmakuTextCell.self
     }
     
-    var nameSpace: String?
-    
     var size: CGSize = .zero
     
     var track: UInt?
@@ -34,13 +32,19 @@ class DanmakuTextCellModel: DanmakuCellModel, Equatable {
     
     var type: DanmakuCellType = .floating
     
+    var isPause = false
+    
     func calculateSize() {
         size = NSString(string: text).boundingRect(with: CGSize(width: CGFloat(Float.infinity
             ), height: 20), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [.font: font], context: nil).size
     }
     
     static func == (lhs: DanmakuTextCellModel, rhs: DanmakuTextCellModel) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.identifier == rhs.identifier
+    }
+    
+    func isEqual(to cellModel: DanmakuCellModel) -> Bool {
+        return identifier == cellModel.identifier
     }
     
     init(json: JSON?) {

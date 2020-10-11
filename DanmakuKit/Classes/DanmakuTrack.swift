@@ -31,6 +31,10 @@ protocol DanmakuTrack {
     
     func stop()
     
+    func pause(_ danmaku: DanmakuCellModel) -> Bool
+    
+    func play(_ danmaku: DanmakuCellModel) -> Bool
+    
 }
 
 let FLOATING_ANIMATION_KEY = "FLOATING_ANIMATION_KEY"
@@ -109,11 +113,28 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
         }
     }
     
+    func play(_ danmaku: DanmakuCellModel) -> Bool {
+        guard let findCell = cells.first(where: { (c) -> Bool in
+            return c.model?.isEqual(to: danmaku) ?? false
+        }) else { return false }
+        addAnimation(to: findCell)
+        return true
+    }
+    
     func pause() {
         cells.forEach {
             $0.center = CGPoint(x: $0.realFrame.midX, y: $0.realFrame.midY)
             $0.layer.removeAllAnimations()
         }
+    }
+    
+    func pause(_ danmaku: DanmakuCellModel) -> Bool {
+        guard let findCell = cells.first(where: { (c) -> Bool in
+            return c.model?.isEqual(to: danmaku) ?? false
+        }) else { return false }
+        findCell.center = CGPoint(x: findCell.realFrame.midX, y: findCell.realFrame.midY)
+        findCell.layer.removeAllAnimations()
+        return true
     }
     
     func stop() {
@@ -201,9 +222,25 @@ class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
         addAnimation(to: cell)
     }
     
+    func play(_ danmaku: DanmakuCellModel) -> Bool {
+        guard let cell = cell else { return false }
+        guard let cellModel = cell.model else { return false }
+        guard cellModel.isEqual(to: danmaku) else { return false }
+        addAnimation(to: cell)
+        return true
+    }
+    
     func pause() {
         guard let cell = cell else { return }
         cell.layer.removeAllAnimations()
+    }
+    
+    func pause(_ danmaku: DanmakuCellModel) -> Bool {
+        guard let cell = cell else { return false }
+        guard let cellModel = cell.model else { return false }
+        guard cellModel.isEqual(to: danmaku) else { return false }
+        cell.layer.removeAllAnimations()
+        return true
     }
     
     func stop() {

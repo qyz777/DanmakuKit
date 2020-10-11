@@ -77,7 +77,7 @@ class FunctionDemoViewController: UIViewController {
         let cellModel = DanmakuTextCellModel(json: nil)
         cellModel.displayTime = displayTime
         cellModel.text = contents[index]
-        cellModel.id = String(arc4random())
+        cellModel.identifier = String(arc4random())
         cellModel.calculateSize()
         if randomIntNumber(lower: 0, upper: 20) <= 5 {
             cellModel.type = .top
@@ -230,13 +230,20 @@ extension FunctionDemoViewController: DanmakuViewDelegate {
     func danmakuView(_ danmakuView: DanmakuView, didEndDisplaying danmaku: DanmakuCell) {
         guard let model = danmaku.model as? DanmakuTextCellModel else { return }
         danmakus.removeAll { (cm) -> Bool in
-            return cm.id == model.id
+            return cm == model
         }
     }
     
     func danmakuView(_ danmakuView: DanmakuView, didTapped danmaku: DanmakuCell) {
         guard let cellModel = danmaku.model as? DanmakuTextCellModel else { return }
         print("tap %@ at tarck %d", cellModel.text, cellModel.track ?? 0)
+        if cellModel.isPause {
+            danmakuView.play(cellModel)
+            cellModel.isPause = false
+        } else {
+            danmakuView.pause(cellModel)
+            cellModel.isPause = true
+        }
     }
     
 }
