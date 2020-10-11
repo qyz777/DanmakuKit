@@ -169,6 +169,7 @@ public extension DanmakuView {
         if findCell == nil {
             guard let cls = NSClassFromString(NSStringFromClass(danmaku.cellClass)) as? DanmakuCell.Type else {
                 assert(false, "Launched Danmaku must inherit from DanmakuCell!")
+                return
             }
             findCell = cls.init(frame: CGRect(x: bounds.width, y: 0, width: danmaku.size.width, height: danmaku.size.height))
             findCell?.model = danmaku
