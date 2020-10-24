@@ -16,6 +16,8 @@ class FunctionDemoViewController: UIViewController {
     private var displayTime: Double = 8
     
     private var danmakus: [DanmakuTextCellModel] = []
+    
+    private var interval = 0.5
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,6 +32,8 @@ class FunctionDemoViewController: UIViewController {
         view.addSubview(changeHeightSlider)
         view.addSubview(changeAreaLabel)
         view.addSubview(changeAreaSlider)
+        view.addSubview(overlapLabel)
+        view.addSubview(overlapSwitch)
         
         danmakuView.frame.origin.y = 100
         playButton.sizeToFit()
@@ -62,6 +66,13 @@ class FunctionDemoViewController: UIViewController {
         changeAreaLabel.frame.origin.x = SCREEN_WIDTH / 2.0 - 40 - changeAreaLabel.frame.width
         changeAreaSlider.frame.origin.y = changeAreaLabel.frame.minY
         changeAreaSlider.frame.origin.x = changeAreaLabel.frame.maxX + 15
+        
+        overlapLabel.sizeToFit()
+        overlapLabel.frame.origin.y = 530
+        overlapLabel.frame.origin.x = SCREEN_WIDTH / 2.0 - 40 - overlapLabel.frame.width
+        overlapSwitch.sizeToFit()
+        overlapSwitch.frame.origin.y = overlapLabel.frame.minY
+        overlapSwitch.frame.origin.x = overlapLabel.frame.maxX + 15
     }
     
     private let contents: [String] = [
@@ -91,7 +102,7 @@ class FunctionDemoViewController: UIViewController {
     @objc
     func play() {
         if timer == nil {
-            timer = Timer(timeInterval:0.5, target: self, selector: #selector(sendDanmaku), userInfo: nil, repeats: true)
+            timer = Timer(timeInterval:interval, target: self, selector: #selector(sendDanmaku), userInfo: nil, repeats: true)
         }
         guard let timer = timer else { return }
         RunLoop.main.add(timer, forMode: .common)
@@ -137,6 +148,16 @@ class FunctionDemoViewController: UIViewController {
             guard let strongSelf = self else { return }
             strongSelf.danmakuView.displayArea = CGFloat(sender.value)
         }
+    }
+    
+    @objc
+    func overlapChange(_ sender: UISwitch) {
+        if sender.isOn {
+            interval = 0.05
+        } else {
+            interval = 0.5
+        }
+        danmakuView.isOverlap = sender.isOn
     }
     
     func randomIntNumber(lower: Int = 0,upper: Int = Int(UInt32.max)) -> Int {
@@ -220,6 +241,20 @@ class FunctionDemoViewController: UIViewController {
         view.maximumValue = 1
         view.value = 1
         view.addTarget(self, action: #selector(changeArea(_:)), for: .touchUpInside)
+        return view
+    }()
+    
+    lazy var overlapLabel: UILabel = {
+        let view = UILabel()
+        view.text = "overlap"
+        view.textColor = .black
+        return view
+    }()
+    
+    lazy var overlapSwitch: UISwitch = {
+        let view = UISwitch(frame: CGRect(x: 0, y: 0, width: 40, height: 20))
+        view.isOn = false
+        view.addTarget(self, action: #selector(overlapChange(_:)), for: .valueChanged)
         return view
     }()
 

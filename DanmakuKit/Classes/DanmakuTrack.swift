@@ -19,6 +19,10 @@ protocol DanmakuTrack {
     
     var stopClosure: ((_ cell: DanmakuCell) -> Void)? { get set }
     
+    var danmakuCount: Int { get }
+    
+    var isOverlap: Bool { get set }
+    
     init(view: UIView)
     
     func shoot(danmaku: DanmakuCell)
@@ -57,6 +61,12 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     
     var stopClosure: ((_ cell: DanmakuCell) -> Void)?
     
+    var isOverlap: Bool = false
+    
+    var danmakuCount: Int {
+        return cells.count
+    }
+    
     private var cells: [DanmakuCell] = []
     
     private weak var view: UIView?
@@ -74,6 +84,7 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     }
     
     func canShoot(danmaku: DanmakuCellModel) -> Bool {
+        guard !isOverlap else { return true }
         //初中数学的追击问题
         guard let cell = cells.last else { return true }
         guard let cellModel = cell.model else { return true }
@@ -189,7 +200,9 @@ class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     
     var positionY: CGFloat = 0 {
         didSet {
-            cell?.layer.position = CGPoint(x: view!.bounds.width / 2.0, y: positionY)
+            cells.forEach {
+                $0.layer.position = CGPoint(x: view!.bounds.width / 2.0, y: positionY)
+            }
         }
     }
     
@@ -197,7 +210,13 @@ class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     
     var stopClosure: ((_ cell: DanmakuCell) -> Void)?
     
-    var cell: DanmakuCell?
+    var isOverlap: Bool = false
+    
+    var danmakuCount: Int {
+        return cells.count
+    }
+    
+    var cells: [DanmakuCell] = []
     
     private weak var view: UIView?
     
@@ -206,7 +225,7 @@ class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     }
     
     func shoot(danmaku: DanmakuCell) {
-        cell = danmaku
+        cells.append(danmaku)
         danmaku.layer.position = CGPoint(x: view!.bounds.width / 2.0, y: positionY)
         danmaku.model?.track = index
         prepare(danmaku: danmaku)
@@ -214,39 +233,43 @@ class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     }
     
     func canShoot(danmaku: DanmakuCellModel) -> Bool {
-        return cell == nil
+        return isOverlap ? true : cells.count == 0
     }
     
     func play() {
-        guard let cell = cell else { return }
-        addAnimation(to: cell)
+        cells.forEach {
+            addAnimation(to: $0)
+        }
     }
     
     func play(_ danmaku: DanmakuCellModel) -> Bool {
-        guard let cell = cell else { return false }
-        guard let cellModel = cell.model else { return false }
-        guard cellModel.isEqual(to: danmaku) else { return false }
-        addAnimation(to: cell)
+        guard let findCell = cells.first(where: { (c) -> Bool in
+            return c.model?.isEqual(to: danmaku) ?? false
+        }) else { return false }
+        addAnimation(to: findCell)
         return true
     }
     
     func pause() {
-        guard let cell = cell else { return }
-        cell.layer.removeAllAnimations()
+        cells.forEach {
+            $0.layer.removeAllAnimations()
+        }
     }
     
     func pause(_ danmaku: DanmakuCellModel) -> Bool {
-        guard let cell = cell else { return false }
-        guard let cellModel = cell.model else { return false }
-        guard cellModel.isEqual(to: danmaku) else { return false }
-        cell.layer.removeAllAnimations()
+        guard let findCell = cells.first(where: { (c) -> Bool in
+            return c.model?.isEqual(to: danmaku) ?? false
+        }) else { return false }
+        findCell.layer.removeAllAnimations()
         return true
     }
     
     func stop() {
-        guard let cell = cell else { return }
-        cell.removeFromSuperview()
-        cell.layer.removeAllAnimations()
+        cells.forEach {
+            $0.removeFromSuperview()
+            $0.layer.removeAllAnimations()
+        }
+        cells.removeAll()
     }
     
     
@@ -254,10 +277,19 @@ class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
         guard let danmaku = anim.value(forKey: DANMAKU_CELL_KEY) as? DanmakuCell else { return }
         danmaku.animationTime += CFAbsoluteTimeGetCurrent() - danmaku.animationBeginTime
         if flag {
-            stopClosure?(danmaku)
-            danmaku.layer.removeAllAnimations()
-            danmaku.frame.origin.x = MAX_FLOAT_X
-            cell = nil
+            var findCell: DanmakuCell?
+            cells.removeAll { (cell) -> Bool in
+                let flag = cell == danmaku
+                if flag {
+                    findCell = cell
+                }
+                return flag
+            }
+            if let cell = findCell {
+                stopClosure?(cell)
+                danmaku.layer.removeAllAnimations()
+                danmaku.frame.origin.x = MAX_FLOAT_X
+            }
         }
     }
     

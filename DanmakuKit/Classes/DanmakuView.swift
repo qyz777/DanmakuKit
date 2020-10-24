@@ -109,6 +109,21 @@ public class DanmakuView: UIView {
         }
     }
     
+    /// If this property is true, the danmaku supports overlapping launches. Default is false.
+    public var isOverlap: Bool = false {
+        didSet {
+            for i in 0..<floatingTracks.count {
+                floatingTracks[i].isOverlap = isOverlap
+            }
+            for i in 0..<topTracks.count {
+                topTracks[i].isOverlap = isOverlap
+            }
+            for i in 0..<bottomTracks.count {
+                bottomTracks[i].isOverlap = isOverlap
+            }
+        }
+    }
+    
     private var danmakuPool: [String: [DanmakuCell]] = [:]
     
     private var floatingTracks: [DanmakuTrack] = []
@@ -157,6 +172,15 @@ public extension DanmakuView {
     
     func shoot(danmaku: DanmakuCellModel) {
         guard status == .play else { return }
+        switch danmaku.type {
+        case .floating:
+            guard !floatingTracks.isEmpty else { return }
+        case .top:
+            guard !topTracks.isEmpty else { return }
+        case .bottom:
+            guard !bottomTracks.isEmpty else { return }
+        }
+        
         var findCell: DanmakuCell?
         if enableCellReusable {
             var cells = danmakuPool[NSStringFromClass(danmaku.cellClass)]
@@ -183,32 +207,14 @@ public extension DanmakuView {
         guard let cell = findCell else { return }
         
         let shootTrack: DanmakuTrack
-        switch danmaku.type {
-        case .floating:
-            guard let track = floatingTracks.first(where: { (t) -> Bool in
-                return t.canShoot(danmaku: danmaku)
-            }) else {
+        if isOverlap {
+            shootTrack = findLeastNumberDanmakuTrack(for: danmaku)
+        } else {
+            guard let t = findSuitableTrack(for: danmaku) else {
                 delegate?.danmakuView(self, noSpaceShoot: danmaku)
                 return
             }
-            shootTrack = track
-        case .top:
-            guard let track = topTracks.first(where: { (t) -> Bool in
-                return t.canShoot(danmaku: danmaku)
-            }) else {
-                delegate?.danmakuView(self, noSpaceShoot: danmaku)
-                return
-            }
-            shootTrack = track
-            
-        case .bottom:
-            guard let track = bottomTracks.last(where: { (t) -> Bool in
-                return t.canShoot(danmaku: danmaku)
-            }) else {
-                delegate?.danmakuView(self, noSpaceShoot: danmaku)
-                return
-            }
-            shootTrack = track
+            shootTrack = t
         }
         
         if cell.superview == nil {
@@ -424,6 +430,57 @@ private extension DanmakuView {
             let index = bottomTracks.count - i - 1
             track.index = UInt(index)
             track.positionY = bounds.height - CGFloat(index) * trackHeight - trackHeight / 2.0 - paddingTop - offsetY
+        }
+    }
+    
+    func findLeastNumberDanmakuTrack(for danmaku: DanmakuCellModel) -> DanmakuTrack {
+        func findLeastNumberDanmaku(from tracks: [DanmakuTrack]) -> DanmakuTrack {
+            //Find a track with the minimum danmaku number
+            var index = 0
+            var value = Int.max
+            for i in 0..<tracks.count {
+                let track = tracks[i]
+                if track.danmakuCount < value {
+                    value = track.danmakuCount
+                    index = i
+                }
+            }
+            return tracks[index]
+        }
+        switch danmaku.type {
+        case .floating:
+            return findLeastNumberDanmaku(from: floatingTracks)
+        case .top:
+            return findLeastNumberDanmaku(from: topTracks)
+        case .bottom:
+            return findLeastNumberDanmaku(from: bottomTracks)
+        }
+    }
+    
+    func findSuitableTrack(for danmaku: DanmakuCellModel) -> DanmakuTrack? {
+        switch danmaku.type {
+        case .floating:
+            guard let track = floatingTracks.first(where: { (t) -> Bool in
+                return t.canShoot(danmaku: danmaku)
+            }) else {
+                return nil
+            }
+            return track
+        case .top:
+            guard let track = topTracks.first(where: { (t) -> Bool in
+                return t.canShoot(danmaku: danmaku)
+            }) else {
+                delegate?.danmakuView(self, noSpaceShoot: danmaku)
+                return nil
+            }
+            return track
+        case .bottom:
+            guard let track = bottomTracks.last(where: { (t) -> Bool in
+                return t.canShoot(danmaku: danmaku)
+            }) else {
+                return nil
+            }
+            return track
         }
     }
     

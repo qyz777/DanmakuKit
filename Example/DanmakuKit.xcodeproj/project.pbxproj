@@ -38,7 +38,7 @@
 
 /* Begin PBXFileReference section */
 		1D101944CD8F2023168DF50E /* Pods_DanmakuKit_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DanmakuKit_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		1DCAB33335F0AD2638CF0E0D /* DanmakuKit.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = DanmakuKit.podspec; path = ../DanmakuKit.podspec; sourceTree = "<group>"; };
+		1DCAB33335F0AD2638CF0E0D /* DanmakuKit.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = DanmakuKit.podspec; path = ../DanmakuKit.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		1FA9FDB9BDA6785F330F9ACD /* Pods-DanmakuKit_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DanmakuKit_Tests.release.xcconfig"; path = "Target Support Files/Pods-DanmakuKit_Tests/Pods-DanmakuKit_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		26D2089B0AB2D8D386FC641F /* Pods_DanmakuKit_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DanmakuKit_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		50995B1A95020F1ED52DF199 /* Pods-DanmakuKit_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DanmakuKit_Example.release.xcconfig"; path = "Target Support Files/Pods-DanmakuKit_Example/Pods-DanmakuKit_Example.release.xcconfig"; sourceTree = "<group>"; };
