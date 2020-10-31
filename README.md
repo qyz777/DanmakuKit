@@ -18,24 +18,20 @@ As shown in the GIF below, DanmakuKit offers three types of danmaku launch: floa
 
 ### Supported features
 
-✅ Speed adjustment
-
-✅ Track height adjustment
-
-✅ Display area adjustment
-
-✅ Click callback 
-
-✅ Support to pause or play a single danmaku
-
-✅ Provides property to specify whether danmaku can overlap.
+- [x] Speed adjustment
+- [x] Track height adjustment
+- [x] Display area adjustment
+- [x] Click callback 
+- [x] Support to pause or play a single danmaku
+- [x] Provides property to specify whether danmaku can overlap.
+- [x] Support to disable danmaku for different types of tracks.
 
 ### TODO
 
 If you have any requirements that you want DanmakuKit to provide, you can raise issue.
 
-* Support for setting progress property to render the danmaku immediately on the view.
-* Support to disable danmaku for different types of tracks.
+- [ ] Support for setting progress property to render the danmaku immediately on the view.
+
 
 ## Example
 
