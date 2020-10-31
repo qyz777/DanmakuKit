@@ -52,7 +52,7 @@ iOS 9.0+
 DanmakuKit is available through [CocoaPods](https://cocoapods.org). To install it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'DanmakuKit', '~> 0.2.0'
+pod 'DanmakuKit', '~> 0.4.0'
 ```
 
 ## Author
