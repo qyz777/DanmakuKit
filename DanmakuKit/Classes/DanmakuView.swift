@@ -124,6 +124,39 @@ public class DanmakuView: UIView {
         }
     }
     
+    /// All floating danmaku are removed immediately after set false, and it won't be launched again. Default is true.
+    public var enableFloatingDanmaku: Bool = true {
+        didSet {
+            if !enableFloatingDanmaku {
+                floatingTracks.forEach {
+                    $0.stop()
+                }
+            }
+        }
+    }
+    
+    /// All top danmaku are removed immediately after set false, and it won't be launched again. Default is true.
+    public var enableTopDanmaku: Bool = true {
+        didSet {
+            if !enableTopDanmaku {
+                topTracks.forEach {
+                    $0.stop()
+                }
+            }
+        }
+    }
+    
+    /// All bottom danmaku are removed immediately after set false, and it won't be launched again. Default is true.
+    public var enableBottomDanmaku: Bool = true {
+        didSet {
+            if !enableBottomDanmaku {
+                bottomTracks.forEach {
+                    $0.stop()
+                }
+            }
+        }
+    }
+    
     private var danmakuPool: [String: [DanmakuCell]] = [:]
     
     private var floatingTracks: [DanmakuTrack] = []
@@ -174,10 +207,13 @@ public extension DanmakuView {
         guard status == .play else { return }
         switch danmaku.type {
         case .floating:
+            guard enableFloatingDanmaku else { return }
             guard !floatingTracks.isEmpty else { return }
         case .top:
+            guard enableTopDanmaku else { return }
             guard !topTracks.isEmpty else { return }
         case .bottom:
+            guard enableBottomDanmaku else { return }
             guard !bottomTracks.isEmpty else { return }
         }
         
@@ -230,14 +266,17 @@ public extension DanmakuView {
         guard status == .play else { return false }
         switch danmaku.type {
         case .floating:
+            guard enableFloatingDanmaku else { return false }
             return (floatingTracks.first { (t) -> Bool in
                 return t.canShoot(danmaku: danmaku)
             }) != nil
         case .top:
+            guard enableTopDanmaku else { return false }
             return (topTracks.first { (t) -> Bool in
                 return t.canShoot(danmaku: danmaku)
             }) != nil
         case .bottom:
+            guard enableBottomDanmaku else { return false }
             return (bottomTracks.first { (t) -> Bool in
                 return t.canShoot(danmaku: danmaku)
             }) != nil

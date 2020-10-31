@@ -34,6 +34,12 @@ class FunctionDemoViewController: UIViewController {
         view.addSubview(changeAreaSlider)
         view.addSubview(overlapLabel)
         view.addSubview(overlapSwitch)
+        view.addSubview(topLabel)
+        view.addSubview(topSwitch)
+        view.addSubview(floatingLabel)
+        view.addSubview(floatingSwitch)
+        view.addSubview(bottomLabel)
+        view.addSubview(bottomSwitch)
         
         danmakuView.frame.origin.y = 100
         playButton.sizeToFit()
@@ -71,8 +77,29 @@ class FunctionDemoViewController: UIViewController {
         overlapLabel.frame.origin.y = 530
         overlapLabel.frame.origin.x = SCREEN_WIDTH / 2.0 - 40 - overlapLabel.frame.width
         overlapSwitch.sizeToFit()
-        overlapSwitch.frame.origin.y = overlapLabel.frame.minY
+        overlapSwitch.center.y = overlapLabel.center.y
         overlapSwitch.frame.origin.x = overlapLabel.frame.maxX + 15
+        
+        topLabel.sizeToFit()
+        topLabel.frame.origin.y = 570
+        topLabel.frame.origin.x = SCREEN_WIDTH / 2.0 - 40 - topLabel.frame.width
+        topSwitch.sizeToFit()
+        topSwitch.center.y = topLabel.center.y
+        topSwitch.frame.origin.x = topLabel.frame.maxX + 15
+        
+        floatingLabel.sizeToFit()
+        floatingLabel.frame.origin.y = 610
+        floatingLabel.frame.origin.x = SCREEN_WIDTH / 2.0 - 40 - floatingLabel.frame.width
+        floatingSwitch.sizeToFit()
+        floatingSwitch.center.y = floatingLabel.center.y
+        floatingSwitch.frame.origin.x = floatingLabel.frame.maxX + 15
+        
+        bottomLabel.sizeToFit()
+        bottomLabel.frame.origin.y = 650
+        bottomLabel.frame.origin.x = SCREEN_WIDTH / 2.0 - 40 - bottomLabel.frame.width
+        bottomSwitch.sizeToFit()
+        bottomSwitch.center.y = bottomLabel.center.y
+        bottomSwitch.frame.origin.x = bottomLabel.frame.maxX + 15
     }
     
     private let contents: [String] = [
@@ -158,6 +185,21 @@ class FunctionDemoViewController: UIViewController {
             interval = 0.5
         }
         danmakuView.isOverlap = sender.isOn
+    }
+    
+    @objc
+    func topChange(_ sender: UISwitch) {
+        danmakuView.enableTopDanmaku = sender.isOn
+    }
+    
+    @objc
+    func floatingChange(_ sender: UISwitch) {
+        danmakuView.enableFloatingDanmaku = sender.isOn
+    }
+    
+    @objc
+    func bottomChange(_ sender: UISwitch) {
+        danmakuView.enableBottomDanmaku = sender.isOn
     }
     
     func randomIntNumber(lower: Int = 0,upper: Int = Int(UInt32.max)) -> Int {
@@ -255,6 +297,48 @@ class FunctionDemoViewController: UIViewController {
         let view = UISwitch(frame: CGRect(x: 0, y: 0, width: 40, height: 20))
         view.isOn = false
         view.addTarget(self, action: #selector(overlapChange(_:)), for: .valueChanged)
+        return view
+    }()
+    
+    lazy var topLabel: UILabel = {
+        let view = UILabel()
+        view.text = "enable top"
+        view.textColor = .black
+        return view
+    }()
+    
+    lazy var topSwitch: UISwitch = {
+        let view = UISwitch(frame: CGRect(x: 0, y: 0, width: 40, height: 20))
+        view.isOn = true
+        view.addTarget(self, action: #selector(topChange(_:)), for: .valueChanged)
+        return view
+    }()
+    
+    lazy var floatingLabel: UILabel = {
+        let view = UILabel()
+        view.text = "enable floating"
+        view.textColor = .black
+        return view
+    }()
+    
+    lazy var floatingSwitch: UISwitch = {
+        let view = UISwitch(frame: CGRect(x: 0, y: 0, width: 40, height: 20))
+        view.isOn = true
+        view.addTarget(self, action: #selector(floatingChange(_:)), for: .valueChanged)
+        return view
+    }()
+    
+    lazy var bottomLabel: UILabel = {
+        let view = UILabel()
+        view.text = "enable bottom"
+        view.textColor = .black
+        return view
+    }()
+    
+    lazy var bottomSwitch: UISwitch = {
+        let view = UISwitch(frame: CGRect(x: 0, y: 0, width: 40, height: 20))
+        view.isOn = true
+        view.addTarget(self, action: #selector(bottomChange(_:)), for: .valueChanged)
         return view
     }()
 

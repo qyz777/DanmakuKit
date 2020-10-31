@@ -247,12 +247,12 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = B9S5K8T3BY;
+						DevelopmentTeam = 437JAL24TE;
 						LastSwiftMigration = 0900;
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = B9S5K8T3BY;
+						DevelopmentTeam = 437JAL24TE;
 						LastSwiftMigration = 0900;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
@@ -536,7 +536,7 @@
 			baseConfigurationReference = CDB672DA59492FFD0B896F83 /* Pods-DanmakuKit_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = B9S5K8T3BY;
+				DEVELOPMENT_TEAM = 437JAL24TE;
 				INFOPLIST_FILE = DanmakuKit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
@@ -552,7 +552,7 @@
 			baseConfigurationReference = 50995B1A95020F1ED52DF199 /* Pods-DanmakuKit_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = B9S5K8T3BY;
+				DEVELOPMENT_TEAM = 437JAL24TE;
 				INFOPLIST_FILE = DanmakuKit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
@@ -567,7 +567,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CA5BFE3043DC2B7C09EDCE06 /* Pods-DanmakuKit_Tests.debug.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = B9S5K8T3BY;
+				DEVELOPMENT_TEAM = 437JAL24TE;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -590,7 +590,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1FA9FDB9BDA6785F330F9ACD /* Pods-DanmakuKit_Tests.release.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = B9S5K8T3BY;
+				DEVELOPMENT_TEAM = 437JAL24TE;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
