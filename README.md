@@ -25,12 +25,13 @@ As shown in the GIF below, DanmakuKit offers three types of danmaku launch: floa
 - [x] Support to pause or play a single danmaku
 - [x] Provides property to specify whether danmaku can overlap.
 - [x] Support to disable danmaku for different types of tracks.
+- [x] Support for setting progress property to render the danmaku immediately on the view.
 
 ### TODO
 
 If you have any requirements that you want DanmakuKit to provide, you can raise issue.
 
-- [ ] Support for setting progress property to render the danmaku immediately on the view.
+- [ ] Support mask danmaku
 
 
 ## Example
@@ -48,7 +49,7 @@ iOS 9.0+
 DanmakuKit is available through [CocoaPods](https://cocoapods.org). To install it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'DanmakuKit', '~> 0.4.0'
+pod 'DanmakuKit', '~> 1.0.0'
 ```
 
 ## Author
