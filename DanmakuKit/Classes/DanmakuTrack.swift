@@ -39,6 +39,12 @@ protocol DanmakuTrack {
     
     func play(_ danmaku: DanmakuCellModel) -> Bool
     
+    func sync(_ danmaku: DanmakuCell, at progress: Float)
+    
+    func syncAndPlay(_ danmaku: DanmakuCell, at progress: Float)
+    
+    func canSync(_ danmaku: DanmakuCellModel, at progress: Float) -> Bool
+    
 }
 
 let FLOATING_ANIMATION_KEY = "FLOATING_ANIMATION_KEY"
@@ -156,6 +162,32 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
         cells.removeAll()
     }
     
+    func sync(_ danmaku: DanmakuCell, at progress: Float) {
+        guard let model = danmaku.model else { return }
+        let totalWidth = view!.frame.width + danmaku.bounds.width
+        let syncFrame = CGRect(x: view!.frame.width - totalWidth * CGFloat(progress), y: positionY - danmaku.bounds.height / 2.0, width: danmaku.bounds.width, height: danmaku.bounds.height)
+        cells.append(danmaku)
+        danmaku.layer.opacity = 1
+        danmaku.frame = syncFrame
+        danmaku.model?.track = index
+        danmaku.animationTime = model.displayTime * Double(progress)
+    }
+    
+    func syncAndPlay(_ danmaku: DanmakuCell, at progress: Float) {
+        sync(danmaku, at: progress)
+        addAnimation(to: danmaku)
+    }
+    
+    func canSync(_ danmaku: DanmakuCellModel, at progress: Float) -> Bool {
+        let totalWidth = view!.frame.width + danmaku.size.width
+        let syncFrame = CGRect(x: view!.frame.width - totalWidth * CGFloat(progress), y: positionY - danmaku.size.height / 2.0, width: danmaku.size.width, height: danmaku.size.height)
+        return cells.first(where: { (cell) -> Bool in
+            // realFrame是presentationLayer的frame，只有坐标是可靠的，size并不可靠，因此这里要使用cell设置size
+            let cellRealyFrame = CGRect(x: cell.realFrame.midX - cell.bounds.width / 2.0, y: cell.realFrame.midY - cell.bounds.height / 2.0, width: cell.bounds.width, height: cell.bounds.height)
+            return cellRealyFrame.intersects(syncFrame)
+        }) == nil
+    }
+    
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         guard let danmaku = anim.value(forKey: DANMAKU_CELL_KEY) as? DanmakuCell else { return }
         danmaku.animationTime += CFAbsoluteTimeGetCurrent() - danmaku.animationBeginTime
@@ -179,7 +211,7 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     private func addAnimation(to danmaku: DanmakuCell) {
         guard let cellModel = danmaku.model else { return }
         danmaku.animationBeginTime = CFAbsoluteTimeGetCurrent()
-        let rate = danmaku.frame.midX / (view!.bounds.width + danmaku.frame.width)
+        let rate = max(danmaku.frame.maxX / (view!.bounds.width + danmaku.frame.width), 0)
         let animation = CABasicAnimation(keyPath: "position.x")
         animation.beginTime = CACurrentMediaTime()
         animation.duration = cellModel.displayTime * Double(rate)
@@ -272,6 +304,23 @@ class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
         cells.removeAll()
     }
     
+    func sync(_ danmaku: DanmakuCell, at progress: Float) {
+        guard let model = danmaku.model else { return }
+        cells.append(danmaku)
+        danmaku.animationTime = model.displayTime * Double(progress)
+        danmaku.model?.track = index
+        danmaku.layer.position = CGPoint(x: view!.bounds.width / 2.0, y: positionY)
+        danmaku.layer.opacity = 1
+    }
+    
+    func syncAndPlay(_ danmaku: DanmakuCell, at progress: Float) {
+        sync(danmaku, at: progress)
+        addAnimation(to: danmaku)
+    }
+    
+    func canSync(_ danmaku: DanmakuCellModel, at progress: Float) -> Bool {
+        return cells.isEmpty
+    }
     
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         guard let danmaku = anim.value(forKey: DANMAKU_CELL_KEY) as? DanmakuCell else { return }

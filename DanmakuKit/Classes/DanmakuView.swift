@@ -15,19 +15,19 @@ public protocol DanmakuViewDelegate: class {
     ///   - danmaku: danmaku
     func danmakuView(_ danmakuView: DanmakuView, dequeueReusable danmaku: DanmakuCell)
     
-    ///  This method is called when the danmaku has no space to display
+    ///  This method is called when the danmaku has no space to display.
     /// - Parameters:
     ///   - danmakuView: view of the danmaku
     ///   - danmaku:  cellModel of danmaku
     func danmakuView(_ danmakuView: DanmakuView, noSpaceShoot danmaku: DanmakuCellModel)
     
-    ///  This method is called when the danmaku is about to be displayed
+    ///  This method is called when the danmaku is about to be displayed.
     /// - Parameters:
     ///   - danmakuView: view of the danmaku
     ///   - danmaku:  danmaku
     func danmakuView(_ danmakuView: DanmakuView, willDisplay danmaku: DanmakuCell)
     
-    /// This method is called when the danmaku is about to end
+    /// This method is called when the danmaku is about to end.
     /// - Parameters:
     ///   - danmakuView: view of the danmaku
     ///   - danmaku: danmaku
@@ -38,6 +38,12 @@ public protocol DanmakuViewDelegate: class {
     ///   - danmakuView: view of the danmaku
     ///   - danmaku: danmaku
     func danmakuView(_ danmakuView: DanmakuView, didTapped danmaku: DanmakuCell)
+    
+    ///  This method is called when the danmaku has no space to sync display.
+    /// - Parameters:
+    ///   - danmakuView: view of the danmaku
+    ///   - danmaku:  cellModel of danmaku
+    func danmakuView(_ danmakuView: DanmakuView, noSpaceSync danmaku: DanmakuCellModel)
     
 }
 
@@ -52,6 +58,8 @@ public extension DanmakuViewDelegate {
     func danmakuView(_ danmakuView: DanmakuView, didEndDisplaying danmaku: DanmakuCell) {}
     
     func danmakuView(_ danmakuView: DanmakuView, didTapped danmaku: DanmakuCell) {}
+    
+    func danmakuView(_ danmakuView: DanmakuView, noSpaceSync danmaku: DanmakuCellModel) {}
     
 }
 
@@ -217,30 +225,7 @@ public extension DanmakuView {
             guard !bottomTracks.isEmpty else { return }
         }
         
-        var findCell: DanmakuCell?
-        if enableCellReusable {
-            var cells = danmakuPool[NSStringFromClass(danmaku.cellClass)]
-            if cells == nil {
-                danmakuPool[NSStringFromClass(danmaku.cellClass)] = []
-            }
-            findCell = (cells?.count ?? 0) > 0 ? cells?.removeFirst() : nil
-        }
-        
-        if findCell == nil {
-            guard let cls = NSClassFromString(NSStringFromClass(danmaku.cellClass)) as? DanmakuCell.Type else {
-                assert(false, "Launched Danmaku must inherit from DanmakuCell!")
-                return
-            }
-            findCell = cls.init(frame: CGRect(x: bounds.width, y: 0, width: danmaku.size.width, height: danmaku.size.height))
-            findCell?.model = danmaku
-            let tap = UITapGestureRecognizer(target: self, action: #selector(danmakuDidTap(_:)))
-            findCell?.addGestureRecognizer(tap)
-        } else {
-            findCell?.model = danmaku
-            delegate?.danmakuView(self, dequeueReusable: findCell!)
-        }
-        
-        guard let cell = findCell else { return }
+        guard let cell = obtainCell(with: danmaku) else { return }
         
         let shootTrack: DanmakuTrack
         if isOverlap {
@@ -367,6 +352,50 @@ public extension DanmakuView {
             })
         }
         return track != nil
+    }
+    
+    /// Display a danmaku synchronously according to the progress. If the status is stop, it will not work.
+    /// - Parameters:
+    ///   - danmaku: danmakuCellModel
+    ///   - progress: progress of danmaku display
+    func sync(danmaku: DanmakuCellModel, at progress: Float) {
+        guard status != .stop else { return }
+        assert(progress <= 1.0, "Cannot sync danmaku at progress \(progress).")
+        switch danmaku.type {
+        case .floating:
+            guard enableFloatingDanmaku else { return }
+            guard !floatingTracks.isEmpty else { return }
+        case .top:
+            guard enableTopDanmaku else { return }
+            guard !topTracks.isEmpty else { return }
+        case .bottom:
+            guard enableBottomDanmaku else { return }
+            guard !bottomTracks.isEmpty else { return }
+        }
+        guard let cell = obtainCell(with: danmaku) else { return }
+        
+        let syncTrack: DanmakuTrack
+        if isOverlap {
+            syncTrack = findLeastNumberDanmakuTrack(for: danmaku)
+        } else {
+            guard let t = findSuitableSyncTrack(for: danmaku, at: progress) else {
+                delegate?.danmakuView(self, noSpaceSync: danmaku)
+                return
+            }
+            syncTrack = t
+        }
+        
+        if cell.superview == nil {
+            addSubview(cell)
+        }
+        
+        delegate?.danmakuView(self, willDisplay: cell)
+        cell.layer.setNeedsDisplay()
+        if status == .play {
+            syncTrack.syncAndPlay(cell, at: progress)
+        } else {
+            syncTrack.sync(cell, at: progress)
+        }
     }
     
     /// When you change some properties of the danmakuView or cellModel that might affect the danmaku, you must make changes in the closure of this method.
@@ -509,7 +538,6 @@ private extension DanmakuView {
             guard let track = topTracks.first(where: { (t) -> Bool in
                 return t.canShoot(danmaku: danmaku)
             }) else {
-                delegate?.danmakuView(self, noSpaceShoot: danmaku)
                 return nil
             }
             return track
@@ -521,6 +549,60 @@ private extension DanmakuView {
             }
             return track
         }
+    }
+    
+    func findSuitableSyncTrack(for danmaku: DanmakuCellModel, at progress: Float) -> DanmakuTrack? {
+        switch danmaku.type {
+        case .floating:
+            guard let track = floatingTracks.first(where: { (t) -> Bool in
+                return t.canSync(danmaku, at: progress)
+            }) else {
+                return nil
+            }
+            return track
+        case .top:
+            guard let track = topTracks.first(where: { (t) -> Bool in
+                return t.canSync(danmaku, at: progress)
+            }) else {
+                return nil
+            }
+            return track
+        case .bottom:
+            guard let track = bottomTracks.last(where: { (t) -> Bool in
+                return t.canSync(danmaku, at: progress)
+            }) else {
+                return nil
+            }
+            return track
+        }
+    }
+    
+    func obtainCell(with danmaku: DanmakuCellModel) -> DanmakuCell? {
+        var cell: DanmakuCell?
+        if enableCellReusable {
+            var cells = danmakuPool[NSStringFromClass(danmaku.cellClass)]
+            if cells == nil {
+                danmakuPool[NSStringFromClass(danmaku.cellClass)] = []
+            }
+            cell = (cells?.count ?? 0) > 0 ? cells?.removeFirst() : nil
+        }
+        
+        let frame = CGRect(x: bounds.width, y: 0, width: danmaku.size.width, height: danmaku.size.height)
+        if cell == nil {
+            guard let cls = NSClassFromString(NSStringFromClass(danmaku.cellClass)) as? DanmakuCell.Type else {
+                assert(false, "Launched Danmaku must inherit from DanmakuCell!")
+                return nil
+            }
+            cell = cls.init(frame: frame)
+            cell?.model = danmaku
+            let tap = UITapGestureRecognizer(target: self, action: #selector(danmakuDidTap(_:)))
+            cell?.addGestureRecognizer(tap)
+        } else {
+            cell?.frame = frame
+            cell?.model = danmaku
+            delegate?.danmakuView(self, dequeueReusable: cell!)
+        }
+        return cell
     }
     
     @objc

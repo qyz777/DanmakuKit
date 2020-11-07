@@ -17,7 +17,7 @@ class FunctionDemoViewController: UIViewController {
     
     private var danmakus: [DanmakuTextCellModel] = []
     
-    private var interval = 0.5
+    private var interval: TimeInterval = 0.5
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +40,8 @@ class FunctionDemoViewController: UIViewController {
         view.addSubview(floatingSwitch)
         view.addSubview(bottomLabel)
         view.addSubview(bottomSwitch)
+        view.addSubview(syncButton)
+        view.addSubview(syncSlider)
         
         danmakuView.frame.origin.y = 100
         playButton.sizeToFit()
@@ -100,6 +102,12 @@ class FunctionDemoViewController: UIViewController {
         bottomSwitch.sizeToFit()
         bottomSwitch.center.y = bottomLabel.center.y
         bottomSwitch.frame.origin.x = bottomLabel.frame.maxX + 15
+        
+        syncButton.sizeToFit()
+        syncButton.frame.origin.y = 680
+        syncButton.frame.origin.x = SCREEN_WIDTH / 2.0 - 40 - syncButton.frame.width
+        syncSlider.frame.origin.y = syncButton.frame.minY
+        syncSlider.frame.origin.x = syncButton.frame.maxX + 15
     }
     
     private let contents: [String] = [
@@ -200,6 +208,22 @@ class FunctionDemoViewController: UIViewController {
     @objc
     func bottomChange(_ sender: UISwitch) {
         danmakuView.enableBottomDanmaku = sender.isOn
+    }
+    
+    @objc
+    func sync(_ sender: UIButton) {
+        let cellModel = DanmakuTextCellModel(json: nil)
+        cellModel.displayTime = displayTime
+        cellModel.text = "Sync Danmaku"
+        cellModel.identifier = String(arc4random())
+        cellModel.calculateSize()
+        if randomIntNumber(lower: 0, upper: 20) <= 5 {
+            cellModel.type = .top
+        } else if randomIntNumber(lower: 0, upper: 20) >= 15 {
+            cellModel.type = .bottom
+        }
+        danmakus.append(cellModel)
+        danmakuView.sync(danmaku: cellModel, at: syncSlider.value)
     }
     
     func randomIntNumber(lower: Int = 0,upper: Int = Int(UInt32.max)) -> Int {
@@ -339,6 +363,23 @@ class FunctionDemoViewController: UIViewController {
         let view = UISwitch(frame: CGRect(x: 0, y: 0, width: 40, height: 20))
         view.isOn = true
         view.addTarget(self, action: #selector(bottomChange(_:)), for: .valueChanged)
+        return view
+    }()
+    
+    lazy var syncButton: UIButton = {
+        let view = UIButton()
+        view.setTitle("sync danmaku", for: .normal)
+        view.setTitleColor(.black, for: .normal)
+        view.addTarget(self, action: #selector(sync(_:)), for: .touchUpInside)
+        view.backgroundColor = UIColor.lightGray
+        return view
+    }()
+    
+    lazy var syncSlider: UISlider = {
+        let view = UISlider(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH / 2.0, height: 20))
+        view.minimumValue = 0
+        view.maximumValue = 1
+        view.value = 1
         return view
     }()
 
