@@ -8,6 +8,8 @@
 
 DanmakuKit is a high performance library that provides the basic functions of danmaku. It provides a set of processes that allow you to generate the danmaku cell via cellModel, and each danmaku can be drawn either synchronously or asynchronously. 
 
+[中文博客](https://juejin.cn/post/6880412928592314376)
+
 As shown in the GIF below, DanmakuKit offers three types of danmaku launch: floating, top and bottom.
 
 ![Demo_0](./Images/demo_0.gif) 
@@ -37,6 +39,13 @@ If you have any requirements that you want DanmakuKit to provide, you can raise 
 ## Example
 
 For detailed usage, see the Example project, which provides a functional demonstration and an example of using it with a player. 
+
+## Use Guide
+
+1. Implement a model to inherit from the DanmakuCellModel. In this model you need to add your own properties and methods to draw the danmaku.
+2. Implement a View inherited from DanmakuCell. Override the `willDisplay` method to prepare a thread-safe model for drawing a danmaku. Then you need to override the `displaying` method, and use CGContext draw your danmaku. **It is important to note when call `displaying` method was not in the main thread, so you need to consider multithreading.** And finally, if you also need to do something at the end of the drawing, you can override the `didDisplay` method to do that.
+3. Pass the DanmakuCellModel to the DanmakuView so that it will fire the danmaku for you.
+
 
 ## Requirements
 
