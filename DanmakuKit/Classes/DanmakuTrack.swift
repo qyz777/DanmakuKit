@@ -45,6 +45,8 @@ protocol DanmakuTrack {
     
     func canSync(_ danmaku: DanmakuCellModel, at progress: Float) -> Bool
     
+    func clean()
+    
 }
 
 let FLOATING_ANIMATION_KEY = "FLOATING_ANIMATION_KEY"
@@ -188,6 +190,10 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
         }) == nil
     }
     
+    func clean() {
+        stop()
+    }
+    
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         guard let danmaku = anim.value(forKey: DANMAKU_CELL_KEY) as? DanmakuCell else { return }
         danmaku.animationTime += CFAbsoluteTimeGetCurrent() - danmaku.animationBeginTime
@@ -320,6 +326,10 @@ class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     
     func canSync(_ danmaku: DanmakuCellModel, at progress: Float) -> Bool {
         return cells.isEmpty
+    }
+    
+    func clean() {
+        stop()
     }
     
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {

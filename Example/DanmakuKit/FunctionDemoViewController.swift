@@ -42,6 +42,7 @@ class FunctionDemoViewController: UIViewController {
         view.addSubview(bottomSwitch)
         view.addSubview(syncButton)
         view.addSubview(syncSlider)
+        view.addSubview(cleanButton)
         
         danmakuView.frame.origin.y = 100
         playButton.sizeToFit()
@@ -108,6 +109,10 @@ class FunctionDemoViewController: UIViewController {
         syncButton.frame.origin.x = SCREEN_WIDTH / 2.0 - 40 - syncButton.frame.width
         syncSlider.frame.origin.y = syncButton.frame.minY
         syncSlider.frame.origin.x = syncButton.frame.maxX + 15
+        
+        cleanButton.sizeToFit()
+        cleanButton.center.x = SCREEN_WIDTH / 2.0
+        cleanButton.frame.origin.y = 710
     }
     
     private let contents: [String] = [
@@ -224,6 +229,11 @@ class FunctionDemoViewController: UIViewController {
         }
         danmakus.append(cellModel)
         danmakuView.sync(danmaku: cellModel, at: syncSlider.value)
+    }
+    
+    @objc
+    func clean(_ sender: UIButton) {
+        danmakuView.clean()
     }
     
     func randomIntNumber(lower: Int = 0,upper: Int = Int(UInt32.max)) -> Int {
@@ -380,6 +390,14 @@ class FunctionDemoViewController: UIViewController {
         view.minimumValue = 0
         view.maximumValue = 1
         view.value = 1
+        return view
+    }()
+    
+    lazy var cleanButton: UIButton = {
+        let view = UIButton(type: .custom)
+        view.setTitle("clean", for: .normal)
+        view.setTitleColor(.black, for: .normal)
+        view.addTarget(self, action: #selector(clean(_:)), for: .touchUpInside)
         return view
     }()
 

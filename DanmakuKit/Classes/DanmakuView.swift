@@ -398,6 +398,13 @@ public extension DanmakuView {
         }
     }
     
+    /// Clean all the currently displayed danmaku.
+    func clean() {
+        floatingTracks.forEach { $0.clean() }
+        bottomTracks.forEach { $0.clean() }
+        topTracks.forEach { $0.clean() }
+    }
+    
     /// When you change some properties of the danmakuView or cellModel that might affect the danmaku, you must make changes in the closure of this method.
     /// E.g.This method will be used when you change the displayTime property in the cellModel.
     /// - Parameter closure: update closure
