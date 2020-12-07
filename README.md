@@ -31,9 +31,11 @@ As shown in the GIF below, DanmakuKit offers three types of danmaku launch: floa
 
 ### TODO
 
-If you have any requirements that you want DanmakuKit to provide, you can raise issue.
+**If you have any requirements that you want DanmakuKit to provide, you can raise issue.**
 
 - [ ] Support mask danmaku
+- [ ] Support to clear all danmaku
+- [ ] Support custom danmaku track number
 
 
 ## Example
