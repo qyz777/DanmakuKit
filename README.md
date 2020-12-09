@@ -28,14 +28,13 @@ As shown in the GIF below, DanmakuKit offers three types of danmaku launch: floa
 - [x] Provides property to specify whether danmaku can overlap.
 - [x] Support to disable danmaku for different types of tracks.
 - [x] Support for setting progress property to render the danmaku immediately on the view.
+- [x] Support to clear all danmaku
 
 ### TODO
 
 **If you have any requirements that you want DanmakuKit to provide, you can raise issue.**
 
 - [ ] Support mask danmaku
-- [ ] Support to clear all danmaku
-- [ ] Support custom danmaku track number
 
 
 ## Example
