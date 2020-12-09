@@ -35,6 +35,7 @@ As shown in the GIF below, DanmakuKit offers three types of danmaku launch: floa
 **If you have any requirements that you want DanmakuKit to provide, you can raise issue.**
 
 - [ ] Support mask danmaku
+- [ ] Support playing speed
 
 
 ## Example
