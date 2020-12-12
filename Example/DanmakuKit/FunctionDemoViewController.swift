@@ -43,6 +43,8 @@ class FunctionDemoViewController: UIViewController {
         view.addSubview(syncButton)
         view.addSubview(syncSlider)
         view.addSubview(cleanButton)
+        view.addSubview(playSpeedLabel)
+        view.addSubview(playSpeedSlider)
         
         danmakuView.frame.origin.y = 100
         playButton.sizeToFit()
@@ -113,6 +115,12 @@ class FunctionDemoViewController: UIViewController {
         cleanButton.sizeToFit()
         cleanButton.center.x = SCREEN_WIDTH / 2.0
         cleanButton.frame.origin.y = 710
+        
+        playSpeedLabel.sizeToFit()
+        playSpeedLabel.frame.origin.y = 740
+        playSpeedLabel.frame.origin.x = SCREEN_WIDTH / 2.0 - 40 - playSpeedLabel.frame.width
+        playSpeedSlider.frame.origin.y = playSpeedLabel.frame.minY
+        playSpeedSlider.frame.origin.x = playSpeedLabel.frame.maxX + 15
     }
     
     private let contents: [String] = [
@@ -147,6 +155,7 @@ class FunctionDemoViewController: UIViewController {
         guard let timer = timer else { return }
         RunLoop.main.add(timer, forMode: .common)
         danmakuView.play()
+        sendDanmaku()
     }
     
     @objc
@@ -234,6 +243,11 @@ class FunctionDemoViewController: UIViewController {
     @objc
     func clean(_ sender: UIButton) {
         danmakuView.clean()
+    }
+    
+    @objc
+    func playSpeedChange(_ sender: UISlider) {
+        danmakuView.playingSpeed = sender.value
     }
     
     func randomIntNumber(lower: Int = 0,upper: Int = Int(UInt32.max)) -> Int {
@@ -398,6 +412,22 @@ class FunctionDemoViewController: UIViewController {
         view.setTitle("clean", for: .normal)
         view.setTitleColor(.black, for: .normal)
         view.addTarget(self, action: #selector(clean(_:)), for: .touchUpInside)
+        return view
+    }()
+    
+    lazy var playSpeedLabel: UILabel = {
+        let view = UILabel()
+        view.text = "play speed"
+        view.textColor = .black
+        return view
+    }()
+    
+    lazy var playSpeedSlider: UISlider = {
+        let view = UISlider(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH / 2.0, height: 20))
+        view.minimumValue = 0.5
+        view.maximumValue = 3
+        view.value = 1
+        view.addTarget(self, action: #selector(playSpeedChange(_:)), for: .touchUpInside)
         return view
     }()
 

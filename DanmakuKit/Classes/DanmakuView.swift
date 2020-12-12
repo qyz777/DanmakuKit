@@ -165,6 +165,28 @@ public class DanmakuView: UIView {
         }
     }
     
+    public var playingSpeed: Float = 1.0 {
+        willSet {
+            assert(newValue > 0, "Danmaku playing speed must be over 0.")
+        }
+        didSet {
+            update {
+                for i in 0..<floatingTracks.count {
+                    var track = floatingTracks[i]
+                    track.playingSpeed = playingSpeed
+                }
+                for i in 0..<topTracks.count {
+                    var track = topTracks[i]
+                    track.playingSpeed = playingSpeed
+                }
+                for i in 0..<bottomTracks.count {
+                    var track = bottomTracks[i]
+                    track.playingSpeed = playingSpeed
+                }
+            }
+        }
+    }
+    
     private var danmakuPool: [String: [DanmakuCell]] = [:]
     
     private var floatingTracks: [DanmakuTrack] = []
@@ -438,11 +460,7 @@ private extension DanmakuView {
             var track = floatingTracks[i]
             track.stopClosure = { [weak self] (cell) in
                 guard let strongSelf = self else { return }
-                guard strongSelf.enableCellReusable else { return }
-                guard let cs = cell.model?.cellClass else { return }
-                strongSelf.delegate?.danmakuView(strongSelf, didEndDisplaying: cell)
-                guard var array = strongSelf.danmakuPool[NSStringFromClass(cs)] else { return }
-                array.append(cell)
+                strongSelf.cellPlayingStop(cell)
             }
             track.index = UInt(i)
             track.positionY = CGFloat(i) * trackHeight + trackHeight / 2.0 + paddingTop + offsetY
@@ -467,11 +485,7 @@ private extension DanmakuView {
             var track = topTracks[i]
             track.stopClosure = { [weak self] (cell) in
                 guard let strongSelf = self else { return }
-                guard strongSelf.enableCellReusable else { return }
-                guard let cs = cell.model?.cellClass else { return }
-                strongSelf.delegate?.danmakuView(strongSelf, didEndDisplaying: cell)
-                guard var array = strongSelf.danmakuPool[NSStringFromClass(cs)] else { return }
-                array.append(cell)
+                strongSelf.cellPlayingStop(cell)
             }
             track.index = UInt(i)
             track.positionY = CGFloat(i) * trackHeight + trackHeight / 2.0 + paddingTop + offsetY
@@ -496,11 +510,7 @@ private extension DanmakuView {
             var track = bottomTracks[i]
             track.stopClosure = { [weak self] (cell) in
                 guard let strongSelf = self else { return }
-                guard strongSelf.enableCellReusable else { return }
-                guard let cs = cell.model?.cellClass else { return }
-                strongSelf.delegate?.danmakuView(strongSelf, didEndDisplaying: cell)
-                guard var array = strongSelf.danmakuPool[NSStringFromClass(cs)] else { return }
-                array.append(cell)
+                strongSelf.cellPlayingStop(cell)
             }
             let index = bottomTracks.count - i - 1
             track.index = UInt(index)
@@ -589,9 +599,10 @@ private extension DanmakuView {
         if enableCellReusable {
             var cells = danmakuPool[NSStringFromClass(danmaku.cellClass)]
             if cells == nil {
-                danmakuPool[NSStringFromClass(danmaku.cellClass)] = []
+                cells = []
             }
             cell = (cells?.count ?? 0) > 0 ? cells?.removeFirst() : nil
+            danmakuPool[NSStringFromClass(danmaku.cellClass)] = cells
         }
         
         let frame = CGRect(x: bounds.width, y: 0, width: danmaku.size.width, height: danmaku.size.height)
@@ -610,6 +621,15 @@ private extension DanmakuView {
             delegate?.danmakuView(self, dequeueReusable: cell!)
         }
         return cell
+    }
+    
+    func cellPlayingStop(_ cell: DanmakuCell) {
+        guard enableCellReusable else { return }
+        guard let cs = cell.model?.cellClass else { return }
+        delegate?.danmakuView(self, didEndDisplaying: cell)
+        guard var array = danmakuPool[NSStringFromClass(cs)] else { return }
+        array.append(cell)
+        danmakuPool[NSStringFromClass(cs)] = array
     }
     
     @objc

@@ -23,6 +23,8 @@ protocol DanmakuTrack {
     
     var isOverlap: Bool { get set }
     
+    var playingSpeed: Float { get set }
+    
     init(view: UIView)
     
     func shoot(danmaku: DanmakuCell)
@@ -74,6 +76,8 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     var danmakuCount: Int {
         return cells.count
     }
+    
+    var playingSpeed: Float = 1.0
     
     private var cells: [DanmakuCell] = []
     
@@ -196,7 +200,7 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         guard let danmaku = anim.value(forKey: DANMAKU_CELL_KEY) as? DanmakuCell else { return }
-        danmaku.animationTime += CFAbsoluteTimeGetCurrent() - danmaku.animationBeginTime
+        danmaku.animationTime += (CFAbsoluteTimeGetCurrent() - danmaku.animationBeginTime) * Double(playingSpeed)
         if flag {
             var findCell: DanmakuCell?
             cells.removeAll { (cell) -> Bool in
@@ -207,9 +211,9 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
                 return flag
             }
             if let cell = findCell {
-                stopClosure?(cell)
                 danmaku.layer.removeAllAnimations()
                 danmaku.frame.origin.x = MAX_FLOAT_X
+                stopClosure?(cell)
             }
         }
     }
@@ -220,7 +224,7 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
         let rate = max(danmaku.frame.maxX / (view!.bounds.width + danmaku.frame.width), 0)
         let animation = CABasicAnimation(keyPath: "position.x")
         animation.beginTime = CACurrentMediaTime()
-        animation.duration = cellModel.displayTime * Double(rate)
+        animation.duration = (cellModel.displayTime * Double(rate)) / Double(playingSpeed)
         animation.delegate = self
         animation.fromValue = NSNumber(value: Float(danmaku.layer.position.x))
         animation.toValue = NSNumber(value: Float(-danmaku.bounds.width / 2.0))
@@ -255,6 +259,8 @@ class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     }
     
     var cells: [DanmakuCell] = []
+    
+    var playingSpeed: Float = 1.0
     
     private weak var view: UIView?
     
@@ -334,7 +340,7 @@ class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
     
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         guard let danmaku = anim.value(forKey: DANMAKU_CELL_KEY) as? DanmakuCell else { return }
-        danmaku.animationTime += CFAbsoluteTimeGetCurrent() - danmaku.animationBeginTime
+        danmaku.animationTime += (CFAbsoluteTimeGetCurrent() - danmaku.animationBeginTime) * Double(playingSpeed)
         if flag {
             var findCell: DanmakuCell?
             cells.removeAll { (cell) -> Bool in
@@ -345,9 +351,9 @@ class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
                 return flag
             }
             if let cell = findCell {
-                stopClosure?(cell)
                 danmaku.layer.removeAllAnimations()
                 danmaku.frame.origin.x = MAX_FLOAT_X
+                stopClosure?(cell)
             }
         }
     }
@@ -357,7 +363,7 @@ class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
         danmaku.animationBeginTime = CFAbsoluteTimeGetCurrent()
         let rate = cellModel.displayTime == 0 ? 0 : (1 - danmaku.animationTime / cellModel.displayTime)
         let animation = CABasicAnimation(keyPath: "opacity")
-        animation.beginTime = CACurrentMediaTime() + cellModel.displayTime * rate
+        animation.beginTime = CACurrentMediaTime() + cellModel.displayTime * rate / Double(playingSpeed)
         animation.duration = 0
         animation.delegate = self
         animation.fromValue = 1
