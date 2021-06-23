@@ -64,10 +64,10 @@ class DanmakuAsyncLayer: CALayer {
     }
     
     override func display() {
-        display(async: displayAsync)
+        display(isAsync: displayAsync)
     }
     
-    private func display(async: Bool) {
+    private func display(isAsync: Bool) {
         guard displaying != nil else {
             willDisplay?(self)
             contents = nil
@@ -75,7 +75,7 @@ class DanmakuAsyncLayer: CALayer {
             return
         }
         
-        if async {
+        if isAsync {
             willDisplay?(self)
             let value = sentinel.getValue()
             let isCancelled = {() -> Bool in
