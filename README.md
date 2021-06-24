@@ -63,10 +63,6 @@ DanmakuKit is available through [CocoaPods](https://cocoapods.org). To install i
 pod 'DanmakuKit', '~> 1.2.1'
 ```
 
-## Author
-
-qyz777, qyizhong1998@gmail.com
-
 ## License
 
 DanmakuKit is available under the MIT license. See the LICENSE file for more info.
