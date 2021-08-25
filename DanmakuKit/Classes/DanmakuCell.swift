@@ -56,6 +56,8 @@ extension DanmakuCell {
     func setupLayer() {
         guard let layer = layer as? DanmakuAsyncLayer else { return }
         
+        layer.contentsScale = UIScreen.main.scale
+        
         layer.willDisplay = { [weak self] (layer) in
             guard let strongSelf = self else { return }
             strongSelf.willDisplay()

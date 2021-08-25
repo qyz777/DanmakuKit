@@ -77,7 +77,7 @@ public class DanmakuView: UIView {
     public weak var delegate: DanmakuViewDelegate?
     
     /// If this property is false, the danmaku will not be reused and danmakuView(_:dequeueReusable danmaku:) methods will not be called.
-    public var enableCellReusable = true
+    public var enableCellReusable = false
     
     /// Each danmaku is in one track and the number of tracks in the view depends on the height of the track.
     public var trackHeight: CGFloat = 20 {
