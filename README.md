@@ -35,8 +35,6 @@ As shown in the GIF below, DanmakuKit offers three types of danmaku launch: floa
 
 **If you have any requirements that you want DanmakuKit to provide, you can raise issue.**
 
-- [ ] Support mask danmaku
-
 
 ## Example
 
@@ -60,7 +58,7 @@ iOS 9.0+
 DanmakuKit is available through [CocoaPods](https://cocoapods.org). To install it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'DanmakuKit', '~> 1.2.1'
+pod 'DanmakuKit', '~> 1.2.2'
 ```
 
 ## License
