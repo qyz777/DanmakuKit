@@ -1,7 +1,7 @@
 use_frameworks!
 
 target 'DanmakuKit_Example' do
-  pod 'DanmakuKit', :path => '../'
+  pod 'DanmakuKit', :path => '../', :subspecs => ['Core', 'Gif']
   
   pod 'KVOController', '1.2.0'
   pod 'DeviceKit', '~> 4.0'

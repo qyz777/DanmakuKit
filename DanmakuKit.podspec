@@ -28,7 +28,15 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '9.0'
   s.swift_versions = ['5.0']
-
-  s.source_files = 'DanmakuKit/Classes/**/*'
+  s.default_subspecs = ['Core']
+  
+  s.subspec 'Core' do |ss|
+    ss.source_files = 'DanmakuKit/Classes/Core/**/*'
+  end
+  
+  s.subspec 'Gif' do |ss|
+    ss.source_files = 'DanmakuKit/Classes/Gif/**/*'
+    ss.dependency 'DanmakuKit/Core'
+  end
   
 end

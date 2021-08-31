@@ -34,10 +34,3 @@ public protocol DanmakuCellModel {
     func isEqual(to cellModel: DanmakuCellModel) -> Bool
     
 }
-
-public protocol DanmakuGifCellModel: DanmakuCellModel {
-    
-    /// GIF data source
-    var resource: Data? { get }
-    
-}
