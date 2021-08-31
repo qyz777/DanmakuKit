@@ -15,7 +15,7 @@ class FunctionDemoViewController: UIViewController {
     
     private var displayTime: Double = 8
     
-    private var danmakus: [DanmakuTextCellModel] = []
+    private var danmakus: [AnyObject & DanmakuCellModel & TestDanmakuCellModel] = []
     
     private var interval: TimeInterval = 0.5
 
@@ -132,25 +132,18 @@ class FunctionDemoViewController: UIViewController {
     
     @objc
     func sendDanmaku() {
-        let index = randomIntNumber(lower: 0, upper: contents.count)
-        let cellModel = DanmakuTextCellModel(json: nil)
-        cellModel.displayTime = displayTime
-        cellModel.text = contents[index]
-        cellModel.identifier = String(arc4random())
-        cellModel.calculateSize()
-        if randomIntNumber(lower: 0, upper: 20) <= 5 {
-            cellModel.type = .top
-        } else if randomIntNumber(lower: 0, upper: 20) >= 15 {
-            cellModel.type = .bottom
+        let randomNumber = randomIntNumber(lower: 0, upper: 100)
+        if randomNumber < 30 {
+            sendCommonDanmaku()
+        } else {
+            sendGifDanmaku()
         }
-        danmakuView.shoot(danmaku: cellModel)
-        danmakus.append(cellModel)
     }
     
     @objc
     func play() {
         if timer == nil {
-            timer = Timer(timeInterval:interval, target: self, selector: #selector(sendDanmaku), userInfo: nil, repeats: true)
+            timer = Timer(timeInterval: interval, target: self, selector: #selector(sendDanmaku), userInfo: nil, repeats: true)
         }
         guard let timer = timer else { return }
         RunLoop.main.add(timer, forMode: .common)
@@ -177,8 +170,8 @@ class FunctionDemoViewController: UIViewController {
         danmakuView.update { [weak self] in
             guard let strongSelf = self else { return }
             strongSelf.displayTime = Double(sender.value)
-            strongSelf.danmakus.forEach {
-                $0.displayTime = displayTime
+            for i in 0..<strongSelf.danmakus.count {
+                strongSelf.danmakus[i].displayTime = displayTime
             }
         }
     }
@@ -252,6 +245,31 @@ class FunctionDemoViewController: UIViewController {
     
     func randomIntNumber(lower: Int = 0,upper: Int = Int(UInt32.max)) -> Int {
         return lower + Int(arc4random_uniform(UInt32(upper - lower)))
+    }
+    
+    func sendCommonDanmaku() {
+        let index = randomIntNumber(lower: 0, upper: contents.count)
+        let cellModel = DanmakuTextCellModel(json: nil)
+        cellModel.displayTime = displayTime
+        cellModel.text = contents[index]
+        cellModel.identifier = String(arc4random())
+        cellModel.calculateSize()
+        if randomIntNumber(lower: 0, upper: 20) <= 5 {
+            cellModel.type = .top
+        } else if randomIntNumber(lower: 0, upper: 20) >= 15 {
+            cellModel.type = .bottom
+        }
+        danmakuView.shoot(danmaku: cellModel)
+        danmakus.append(cellModel)
+    }
+    
+    func sendGifDanmaku() {
+        let cellModel = DanmakuTestGifCellModel()
+        cellModel.displayTime = displayTime
+        cellModel.identifier = String(arc4random())
+        cellModel.size = CGSize(width: 20, height: 20)
+        danmakuView.shoot(danmaku: cellModel)
+        danmakus.append(cellModel)
     }
     
     lazy var danmakuView: DanmakuView = {
@@ -436,15 +454,17 @@ class FunctionDemoViewController: UIViewController {
 extension FunctionDemoViewController: DanmakuViewDelegate {
     
     func danmakuView(_ danmakuView: DanmakuView, didEndDisplaying danmaku: DanmakuCell) {
-        guard let model = danmaku.model as? DanmakuTextCellModel else { return }
+        guard let model = danmaku.model else { return }
         danmakus.removeAll { (cm) -> Bool in
-            return cm == model
+            return cm.isEqual(to: model)
         }
     }
     
     func danmakuView(_ danmakuView: DanmakuView, didTapped danmaku: DanmakuCell) {
-        guard let cellModel = danmaku.model as? DanmakuTextCellModel else { return }
-        print("tap %@ at tarck %d", cellModel.text, cellModel.track ?? 0)
+        guard var cellModel = danmaku.model as? (DanmakuCellModel & TestDanmakuCellModel) else { return }
+        if let cm = danmaku.model as? DanmakuTextCellModel {
+            print("tap %@ at tarck %d", cm.text, cm.track ?? 0)
+        }
         if cellModel.isPause {
             danmakuView.play(cellModel)
             cellModel.isPause = false

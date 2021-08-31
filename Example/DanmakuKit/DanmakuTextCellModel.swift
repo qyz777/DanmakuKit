@@ -10,7 +10,7 @@ import Foundation
 import DanmakuKit
 import SwiftyJSON
 
-class DanmakuTextCellModel: DanmakuCellModel, Equatable {
+class DanmakuTextCellModel: DanmakuCellModel, TestDanmakuCellModel, Equatable {
     
     var identifier = ""
     

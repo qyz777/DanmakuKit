@@ -15,6 +15,9 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		A02A4FDD26DE79F900B5BD01 /* TestDanmakuCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02A4FDC26DE79F900B5BD01 /* TestDanmakuCellModel.swift */; };
+		A02A4FE126DE7A0100B5BD01 /* test.gif in Resources */ = {isa = PBXBuildFile; fileRef = A02A4FE026DE7A0100B5BD01 /* test.gif */; };
+		A02A4FE526DE7A1400B5BD01 /* DanmakuTestGifCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02A4FE426DE7A1400B5BD01 /* DanmakuTestGifCellModel.swift */; };
 		A076E08324FA80B200A8FC06 /* DanmakuTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A076E08224FA80B200A8FC06 /* DanmakuTextCell.swift */; };
 		A076E08524FA80C800A8FC06 /* DanmakuTextCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A076E08424FA80C800A8FC06 /* DanmakuTextCellModel.swift */; };
 		A076E08724FB79B300A8FC06 /* FunctionDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A076E08624FB79B300A8FC06 /* FunctionDemoViewController.swift */; };
@@ -52,6 +55,9 @@
 		607FACE51AFB9204008FA782 /* DanmakuKit_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DanmakuKit_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
+		A02A4FDC26DE79F900B5BD01 /* TestDanmakuCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestDanmakuCellModel.swift; sourceTree = "<group>"; };
+		A02A4FE026DE7A0100B5BD01 /* test.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = test.gif; sourceTree = "<group>"; };
+		A02A4FE426DE7A1400B5BD01 /* DanmakuTestGifCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DanmakuTestGifCellModel.swift; sourceTree = "<group>"; };
 		A076E08224FA80B200A8FC06 /* DanmakuTextCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuTextCell.swift; sourceTree = "<group>"; };
 		A076E08424FA80C800A8FC06 /* DanmakuTextCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuTextCellModel.swift; sourceTree = "<group>"; };
 		A076E08624FB79B300A8FC06 /* FunctionDemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionDemoViewController.swift; sourceTree = "<group>"; };
@@ -124,6 +130,8 @@
 				A0A0EB54252568290078080E /* PlayerView.swift */,
 				A0A0EB5625256A320078080E /* PlayerViewController.swift */,
 				A0A0EB5C252896D00078080E /* DanmakuService.swift */,
+				A02A4FDC26DE79F900B5BD01 /* TestDanmakuCellModel.swift */,
+				A02A4FE426DE7A1400B5BD01 /* DanmakuTestGifCellModel.swift */,
 				A0A0EB5E252896D80078080E /* Resource */,
 			);
 			name = "Example for DanmakuKit";
@@ -188,6 +196,7 @@
 		A0A0EB5E252896D80078080E /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				A02A4FE026DE7A0100B5BD01 /* test.gif */,
 				A0A0EB5A252896C00078080E /* danmaku.json */,
 				A0A0EB5825256B880078080E /* demo.MOV */,
 			);
@@ -287,6 +296,7 @@
 				A0A0EB5925256B880078080E /* demo.MOV in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				A0A0EB5B252896C00078080E /* danmaku.json in Resources */,
+				A02A4FE126DE7A0100B5BD01 /* test.gif in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -385,6 +395,8 @@
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				A076E08324FA80B200A8FC06 /* DanmakuTextCell.swift in Sources */,
+				A02A4FDD26DE79F900B5BD01 /* TestDanmakuCellModel.swift in Sources */,
+				A02A4FE526DE7A1400B5BD01 /* DanmakuTestGifCellModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

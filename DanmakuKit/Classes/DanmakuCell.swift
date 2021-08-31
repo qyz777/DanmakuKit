@@ -24,16 +24,26 @@ open class DanmakuCell: UIView {
         setupLayer()
     }
     
-    required public init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    /// Overriding this method, you can get the timing before the content rendering.
     open func willDisplay() {}
     
+    
+    /// Overriding this method to draw danmaku.
+    /// - Parameters:
+    ///   - context: drawing context
+    ///   - size: bounds.size
+    ///   - isCancelled: Whether drawing is cancelled
     open func displaying(_ context: CGContext, _ size: CGSize, _ isCancelled: Bool) {}
     
+    /// Overriding this method, you can get the timing after the content rendering.
+    /// - Parameter finished: False if draw is cancelled
     open func didDisplay(_ finished: Bool) {}
     
+    /// Decide whether to use asynchronous rendering.
     public var displayAsync = true {
         didSet {
             guard let layer = layer as? DanmakuAsyncLayer else { return }

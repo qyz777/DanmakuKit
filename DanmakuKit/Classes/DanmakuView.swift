@@ -624,12 +624,12 @@ private extension DanmakuView {
     }
     
     func cellPlayingStop(_ cell: DanmakuCell) {
-        guard enableCellReusable else { return }
         guard let cs = cell.model?.cellClass else { return }
         delegate?.danmakuView(self, didEndDisplaying: cell)
-        guard var array = danmakuPool[NSStringFromClass(cs)] else { return }
-        array.append(cell)
-        danmakuPool[NSStringFromClass(cs)] = array
+        if var array = danmakuPool[NSStringFromClass(cs)], enableCellReusable {
+            array.append(cell)
+            danmakuPool[NSStringFromClass(cs)] = array
+        }
     }
     
     @objc
