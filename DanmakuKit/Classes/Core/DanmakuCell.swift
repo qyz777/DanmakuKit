@@ -43,6 +43,12 @@ open class DanmakuCell: UIView {
     /// - Parameter finished: False if draw is cancelled
     open func didDisplay(_ finished: Bool) {}
     
+    /// Overriding this method, you can get th timing of danmaku enter track.
+    open func enterTrack() {}
+    
+    /// Overriding this method, you can get th timing of danmaku leave track.
+    open func leaveTrack() {}
+    
     /// Decide whether to use asynchronous rendering.
     public var displayAsync = true {
         didSet {

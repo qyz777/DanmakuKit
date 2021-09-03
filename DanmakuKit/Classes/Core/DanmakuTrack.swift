@@ -93,6 +93,7 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
         danmaku.model?.track = index
         prepare(danmaku: danmaku)
         addAnimation(to: danmaku)
+        danmaku.enterTrack()
     }
     
     func canShoot(danmaku: DanmakuCellModel) -> Bool {
@@ -211,8 +212,9 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
                 return flag
             }
             if let cell = findCell {
-                danmaku.layer.removeAllAnimations()
-                danmaku.frame.origin.x = MAX_FLOAT_X
+                cell.layer.removeAllAnimations()
+                cell.frame.origin.x = MAX_FLOAT_X
+                cell.leaveTrack()
                 stopClosure?(cell)
             }
         }
