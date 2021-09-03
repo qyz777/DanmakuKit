@@ -6,17 +6,7 @@
 //
 
 import UIKit
-
-fileprivate func dispatchSyncMain(_ closure: (() -> Void)) {
-    if Thread.isMainThread {
-        closure()
-    } else {
-        DispatchQueue.main.sync(execute: closure)
-    }
-}
-
-fileprivate let DANMAKU_GIF_ANIMATION_KEY = "DANMAKU_GIF_ANIMATION_KEY"
-
+import MobileCoreServices
 
 /// You can use or inherit this cell to shoot a danmaku with a GIF animation.
 /// You need to implement the DanmakuGifCellModel protocol for your data source.
@@ -25,12 +15,11 @@ fileprivate let DANMAKU_GIF_ANIMATION_KEY = "DANMAKU_GIF_ANIMATION_KEY"
 /// If you want to implement other specific features, you can refer to the implementation of this class.
 open class DanmakuGifCell: DanmakuCell {
     
-    /// The animation length of each frame, default is 0.1.
-    public var minFrameDuration: Float = 0.1
-    
     private var gifModel: DanmakuGifCellModel? {
         return model as? DanmakuGifCellModel
     }
+    
+    public private(set) var animator: GifAnimator?
     
     public required init(frame: CGRect) {
         super.init(frame: frame)
@@ -41,76 +30,49 @@ open class DanmakuGifCell: DanmakuCell {
         super.init(coder: coder)
     }
     
-    open override func displaying(_ context: CGContext, _ size: CGSize, _ isCancelled: Bool) {
-        //在主线程，不需要考虑多线程问题
-        dispatchSyncMain {
-            guard self.layer.animation(forKey: DANMAKU_GIF_ANIMATION_KEY) == nil else { return }
-            guard let animation = createGIFAnimation() else {
-                debugPrint("Could not create gif animetion.")
-                return
-            }
-            self.layer.add(animation, forKey: DANMAKU_GIF_ANIMATION_KEY)
-        }
+    open override func enterTrack() {
+        super.enterTrack()
+        prepare()
+        animator?.startAnimation()
     }
     
-    private func createGIFAnimation() -> CAKeyframeAnimation? {
-        guard let data = gifModel?.resource else { return nil }
-        let bytes = [UInt8](data)
-        guard let gifData = CFDataCreate(nil, bytes, bytes.count) else { return nil }
-        guard let image = CGImageSourceCreateWithData(gifData, nil) else { return nil }
-        
-        var time: Float = 0
-        
-        var framesArray: [AnyObject] = []
-        var tempTimesArray: [NSNumber] = []
-        let frameCount = CGImageSourceGetCount(image)
-        
-        for i in 0..<frameCount {
-            var frameDuration = minFrameDuration
-            let properties = CGImageSourceCopyPropertiesAtIndex(image, i, nil)
-            guard let framePrpoerties = properties as? [String: AnyObject] else { return nil }
-            guard let gifProperties = framePrpoerties[kCGImagePropertyGIFDictionary as String] as? [String: AnyObject] else { return nil }
-            
-            if let delayTimeUnclampedProp = gifProperties[kCGImagePropertyGIFUnclampedDelayTime as String] as? NSNumber {
-                frameDuration = delayTimeUnclampedProp.floatValue
-            } else {
-                if let delayTimeProp = gifProperties[kCGImagePropertyGIFDelayTime as String] as? NSNumber {
-                    frameDuration = delayTimeProp.floatValue
-                }
-            }
-            
-            if frameDuration < 0.011 {
-                frameDuration = minFrameDuration
-            }
-            
-            if let frame = CGImageSourceCreateImageAtIndex(image, i, nil) {
-                tempTimesArray.append(NSNumber(value: frameDuration))
-                framesArray.append(frame)
-            }
-            
-            time += frameDuration
+    open override func leaveTrack() {
+        super.leaveTrack()
+        animator?.stopAnimation()
+        animator = nil
+    }
+    
+    private func prepare() {
+        animator = nil
+        guard let gifModel = gifModel else { return }
+        guard let data = gifModel.resource else { return }
+        guard let image = UIImage(data: data) else {
+            debugPrint("Could not create gif animetion because image create failed.")
+            return
         }
         
-        var timesArray: [NSNumber] = []
-        var base: Float = 0
-        for duration in tempTimesArray {
-            base += duration.floatValue / time
-            timesArray.append(NSNumber(value: base))
+        let info: [CFString: Any] = [
+            kCGImageSourceShouldCache: true,
+            kCGImageSourceTypeIdentifierHint: kUTTypeGIF
+        ]
+        guard let imageSource = CGImageSourceCreateWithData(data as CFData, info as CFDictionary) else {
+            debugPrint("Could not create gif animetion because imageSource create failed.")
+            return
         }
         
-        timesArray.append(NSNumber(value: 1.0))
-        
-        let animation = CAKeyframeAnimation(keyPath: "contents")
-        animation.beginTime = CACurrentMediaTime()
-        animation.duration = CFTimeInterval(time)
-        animation.repeatCount = Float.greatestFiniteMagnitude
-        animation.isRemovedOnCompletion = false
-        animation.fillMode = .forwards
-        animation.values = framesArray
-        animation.keyTimes = timesArray
-        animation.timingFunction = CAMediaTimingFunction(name: .linear)
-        animation.calculationMode = .discrete
-        return animation
+        let animator = GifAnimator(imageSource: imageSource,
+                                   preloadCount: gifModel.preloadFrameCount,
+                                   imageSize: gifModel.size,
+                                   imageScale: image.scale,
+                                   maxRepeatCount: gifModel.maxRepeatCount)
+        animator.backgroundDecode = gifModel.backgroundDecode
+        animator.prepare()
+        animator.update = { [weak self] in
+            guard let frame = $0 else { return }
+            self?.layer.contents = frame.cgImage
+        }
+        self.animator = animator
     }
     
 }
+
