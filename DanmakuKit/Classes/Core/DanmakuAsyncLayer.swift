@@ -24,9 +24,7 @@ class Sentinel {
     
 }
 
-var pool: DanmakuQueuePool!
-
-class DanmakuAsyncLayer: CALayer {
+public class DanmakuAsyncLayer: CALayer {
     
     /// When true, it is drawn asynchronously and is ture by default.
     public var displayAsync = true
@@ -37,7 +35,18 @@ class DanmakuAsyncLayer: CALayer {
     
     public var didDisplay: ((_ layer: DanmakuAsyncLayer, _ finished: Bool) -> Void)?
     
+    /// The number of queues to draw the danmaku.
+    public static var drawDanmakuQueueCount = 16 {
+        didSet {
+            guard drawDanmakuQueueCount != oldValue else { return }
+            pool = nil
+            createPoolIfNeed()
+        }
+    }
+    
     private let sentinel = Sentinel()
+    
+    private static var pool: DanmakuQueuePool?
     
     override init() {
         super.init()
@@ -56,14 +65,14 @@ class DanmakuAsyncLayer: CALayer {
         sentinel.increase()
     }
     
-    override func setNeedsDisplay() {
+    public override func setNeedsDisplay() {
         //1. Cancel the last drawing
         sentinel.increase()
         //2. call super
         super.setNeedsDisplay()
     }
     
-    override func display() {
+    public override func display() {
         display(isAsync: displayAsync)
     }
     
@@ -85,7 +94,7 @@ class DanmakuAsyncLayer: CALayer {
             let scale = contentsScale
             let opaque = isOpaque
             let backgroundColor = (opaque && self.backgroundColor != nil) ? self.backgroundColor : nil
-            pool.queue.async {
+            queue.async {
                 guard !isCancelled() else { return }
                 UIGraphicsBeginImageContextWithOptions(size, opaque, scale)
                 guard let context = UIGraphicsGetCurrentContext() else {
@@ -147,5 +156,14 @@ class DanmakuAsyncLayer: CALayer {
             didDisplay?(self, true)
         }
     }
+    
+    private static func createPoolIfNeed() {
+        guard DanmakuAsyncLayer.pool == nil else { return }
+        DanmakuAsyncLayer.pool = DanmakuQueuePool(name: "com.DanmakuKit.DanmakuAsynclayer", queueCount: DanmakuAsyncLayer.drawDanmakuQueueCount, qos: .userInteractive)
+    }
+    
+    private lazy var queue: DispatchQueue = {
+        return DanmakuAsyncLayer.pool?.queue ?? DispatchQueue(label: "com.DanmakuKit.DanmakuAsynclayer")
+    }()
     
 }

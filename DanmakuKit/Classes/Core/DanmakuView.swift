@@ -69,9 +69,6 @@ public enum DanmakuStatus {
     case stop
 }
 
-/// The number of queues to draw the danmaku. If you want to change it, you must do so before the danmakuView is first created.
-public var DRAW_DANMAKU_QUEUE_COUNT = 16
-
 public class DanmakuView: UIView {
     
     public weak var delegate: DanmakuViewDelegate?
@@ -201,7 +198,6 @@ public class DanmakuView: UIView {
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        createPoolIfNeed()
         recaculateTracks()
     }
     
@@ -636,11 +632,6 @@ private extension DanmakuView {
     func danmakuDidTap(_ tap: UITapGestureRecognizer) {
         guard let view = tap.view as? DanmakuCell else { return }
         delegate?.danmakuView(self, didTapped: view)
-    }
-    
-    func createPoolIfNeed() {
-        guard pool == nil else { return }
-        pool = DanmakuQueuePool(name: "com.DanmakuKit.DanmakuAsynclayer", queueCount: DRAW_DANMAKU_QUEUE_COUNT, qos: .userInteractive)
     }
     
 }
