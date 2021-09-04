@@ -123,6 +123,11 @@ class FunctionDemoViewController: UIViewController {
         playSpeedSlider.frame.origin.x = playSpeedLabel.frame.maxX + 15
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        stop()
+    }
+    
     private let contents: [String] = [
         "我是一条长长的弹幕",
         "我是测试",
