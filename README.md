@@ -30,6 +30,7 @@ As shown in the GIF below, DanmakuKit offers three types of danmaku launch: floa
 - [x] Support for setting progress property to render the danmaku immediately on the view
 - [x] Support to clear all danmaku
 - [x] Support playing speed
+- [x] Support GIF Danmaku
 
 ### TODO
 
@@ -58,7 +59,7 @@ iOS 9.0+
 DanmakuKit is available through [CocoaPods](https://cocoapods.org). To install it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'DanmakuKit', '~> 1.2.2'
+pod 'DanmakuKit', '~> 1.3.0'
 ```
 
 ## License
