@@ -138,7 +138,7 @@ class FunctionDemoViewController: UIViewController {
     @objc
     func sendDanmaku() {
         let randomNumber = randomIntNumber(lower: 0, upper: 100)
-        if randomNumber < 30 {
+        if randomNumber < 70 {
             sendCommonDanmaku()
         } else {
             sendGifDanmaku()

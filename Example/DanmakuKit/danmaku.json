@@ -12,6 +12,16 @@
         },
         {
             "offset_time": 0,
+            "type": 0,
+            "danmaku_type": 1
+        },
+        {
+            "offset_time": 0,
+            "type": 0,
+            "danmaku_type": 1
+        },
+        {
+            "offset_time": 0,
             "text": "test danmaku!",
             "type": 0
         },
@@ -34,6 +44,16 @@
             "offset_time": 0.5,
             "text": "test danmaku!",
             "type": 0
+        },
+        {
+            "offset_time": 0.5,
+            "type": 0,
+            "danmaku_type": 1
+        },
+        {
+            "offset_time": 0.5,
+            "type": 0,
+            "danmaku_type": 1
         },
         {
             "offset_time": 0.5,
@@ -54,6 +74,16 @@
             "offset_time": 1.5,
             "text": "test danmaku!",
             "type": 2
+        },
+        {
+            "offset_time": 1.5,
+            "type": 0,
+            "danmaku_type": 1
+        },
+        {
+            "offset_time": 1.5,
+            "type": 0,
+            "danmaku_type": 1
         },
         {
             "offset_time": 1.5,

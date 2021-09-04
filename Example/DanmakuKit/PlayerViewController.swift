@@ -25,7 +25,7 @@ class PlayerViewController: UIViewController {
     
     public private(set) var isFullScreen: Bool = false
     
-    public var danmakuArray: [DanmakuTextCellModel] = []
+    public var danmakuArray: [AnyObject & DanmakuCellModel & TestDanmakuCellModel] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,8 +44,12 @@ class PlayerViewController: UIViewController {
         
         danmakuService.request { [weak self] (json) in
             guard let strongSelf = self else { return }
-            strongSelf.danmakuArray = json["data"].arrayValue.map({ (json) -> DanmakuTextCellModel in
-                return DanmakuTextCellModel(json: json)
+            strongSelf.danmakuArray = json["data"].arrayValue.map({ (json) -> AnyObject & DanmakuCellModel & TestDanmakuCellModel in
+                if json["danmaku_type"].int == 1 {
+                    return DanmakuTestGifCellModel(json: json)
+                } else {
+                    return DanmakuTextCellModel(json: json)
+                }
             })
         }
         
@@ -278,7 +282,7 @@ extension PlayerViewController {
 extension PlayerViewController: PlayerViewDelegate {
     
     func player(_ player: PlayerView, playAt time: Double) {
-        var array: [DanmakuTextCellModel] = []
+        var array: [AnyObject & DanmakuCellModel & TestDanmakuCellModel] = []
         for cm in danmakuArray {
             if cm.offsetTime <= time {
                 array.append(cm)

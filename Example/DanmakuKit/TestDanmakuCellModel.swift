@@ -14,4 +14,14 @@ protocol TestDanmakuCellModel {
     
     var displayTime: Double { get set }
     
+    var offsetTime: TimeInterval { get set }
+    
+    func calculateSize()
+    
+}
+
+extension TestDanmakuCellModel {
+    
+    func calculateSize() {}
+    
 }
