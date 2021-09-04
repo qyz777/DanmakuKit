@@ -47,6 +47,8 @@ For detailed usage, see the Example project, which provides a functional demonst
 2. Implement a View inherited from DanmakuCell. Override the `willDisplay` method to prepare a thread-safe model for drawing a danmaku. Then you need to override the `displaying` method, and use CGContext draw your danmaku. **It is important to note when call `displaying` method was not in the main thread, so you need to consider multithreading.** And finally, if you also need to do something at the end of the drawing, you can override the `didDisplay` method to do that.
 3. Pass the DanmakuCellModel to the DanmakuView so that it will fire the danmaku for you.
 
+If you want to display GIF on a danmaku, then import the Gif subspec and use the DanmakuGifCell and DanmakuGifCellModel.
+
 
 ## Requirements
 
