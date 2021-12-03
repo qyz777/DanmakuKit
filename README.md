@@ -1,8 +1,10 @@
-# DanmakuKit
+![DanmakuKit](./Images/DanmakuKit.png)
 
 [![Version](https://img.shields.io/cocoapods/v/DanmakuKit.svg?style=flat)](https://cocoapods.org/pods/DanmakuKit)
 [![License](https://img.shields.io/cocoapods/l/DanmakuKit.svg?style=flat)](https://cocoapods.org/pods/DanmakuKit)
 [![Platform](https://img.shields.io/cocoapods/p/DanmakuKit.svg?style=flat)](https://cocoapods.org/pods/DanmakuKit)
+
+# DanmakuKit
 
 ## Introduction
 
