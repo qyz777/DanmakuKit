@@ -53,7 +53,7 @@ open class DanmakuCell: UIView {
     public var displayAsync = true {
         didSet {
             guard let layer = layer as? DanmakuAsyncLayer else { return }
-            layer.displayAsync = oldValue
+            layer.displayAsync = displayAsync
         }
     }
        
