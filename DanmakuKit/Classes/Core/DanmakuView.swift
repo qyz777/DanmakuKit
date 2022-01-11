@@ -205,6 +205,10 @@ public class DanmakuView: UIView {
         super.init(coder: coder)
     }
     
+    deinit {
+        stop()
+    }
+    
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard self.point(inside: point, with: event) else { return nil }
         
