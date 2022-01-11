@@ -4,15 +4,15 @@
 [![License](https://img.shields.io/cocoapods/l/DanmakuKit.svg?style=flat)](https://cocoapods.org/pods/DanmakuKit)
 [![Platform](https://img.shields.io/cocoapods/p/DanmakuKit.svg?style=flat)](https://cocoapods.org/pods/DanmakuKit)
 
-# DanmakuKit([中文](./README_CN.md))
+# DanmakuKit
 
-## Introduction
+## 介绍
 
-DanmakuKit is a high performance library that provides the basic functions of danmaku. It provides a set of processes that allow you to generate the danmaku cell via cellModel, and each danmaku can be drawn either synchronously or asynchronously. 
+DanmakuKit是一个高性能弹幕框架，提供了弹幕相关的基础功能。它提供了一系列操作能够允许你通过cellModel来生成弹幕，并且每个弹幕都支持同步或异步渲染。
 
 [中文博客](https://juejin.cn/post/6880412928592314376)
 
-As shown in the GIF below, DanmakuKit offers three types of danmaku launch: floating, top and bottom.
+如下GIF所示，DanmakuKit提供三种类型的弹幕：悬浮、置顶和置地。
 
 ![Demo_0](./Images/demo_0.gif) 
 
@@ -22,22 +22,22 @@ As shown in the GIF below, DanmakuKit offers three types of danmaku launch: floa
 
 ### Supported features
 
-- [x] Speed adjustment
-- [x] Track height adjustment
-- [x] Display area adjustment
-- [x] Click callback 
-- [x] Support to pause or play a single danmaku
-- [x] Provides property to specify whether danmaku can overlap
-- [x] Support to disable danmaku for different types of tracks
-- [x] Support for setting progress property to render the danmaku immediately on the view
-- [x] Support to clean up all danmaku
-- [x] Support Gif Danmaku
+- [x] 速度调节
+- [x] 轨道高度调节
+- [x] 显示区域调节
+- [x] 点击回调 
+- [x] 暂停和播放单条弹幕
+- [x] 弹幕重叠或非重叠状态
+- [x] 针对不同类型的轨道禁用弹幕
+- [x] 设置弹幕播放进度
+- [x] 清理所有弹幕
+- [x] Gif弹幕
 
-## Use Guide
+## 使用指南
 
-### Draw Danmaku
+### 弹幕绘制
 
-1. Implement a model to inherit from the DanmakuCellModel. In this model you need to add your own properties and methods to draw the danmaku.
+1. 实现一个从DanmakuCellModel继承的cellModel。在这个cellModel中需要添加自己的属性和方法来画出弹幕。
 
 ```swift
 class DanmakuTextCellModel: DanmakuCellModel {
@@ -74,7 +74,7 @@ class DanmakuTextCellModel: DanmakuCellModel {
 }
 ```
 
-2. Implement a View inherited from DanmakuCell. Then you need to override the `displaying` method, and use CGContext draw your danmaku. **It is important to note when call `displaying` method was not in the main thread, so you need to consider multithreading.** 
+2. 实现一个继承DanmakuCell的View。接着实现`displaying`方法，并使用CGContext来绘制弹幕。需要注意的是，`displaying`方法的调用并不会在主线程，所以你需要考虑多线程问题。
 
 ```swift
 class DanmakuTextCell: DanmakuCell {
@@ -104,7 +104,7 @@ class DanmakuTextCell: DanmakuCell {
 }
 ```
 
-3. Pass the DanmakuCellModel to the DanmakuView to display danmaku.
+3. 给DanmakuView传DanmakuCellModel来显示弹幕。
 
 ```swift
 let danmakuView = DanmakuView(frame: CGRect(x: 0, y: 0, width: 350, height: 250))
@@ -118,49 +118,49 @@ cellModel.type = .floating
 danmakuView.shoot(danmaku: cellModel)
 ```
 
-### Play Danmaku
+### 播放弹幕
 
-Call play() method to start display danmaku.
+调用play()方法开始显示弹幕。
 
 ```swift
 danmakuView.play()
 ```
 
-Call pause() method to pause the play of danmaku.
+调用pause()方法暂停弹幕播放。
 
 ```swift
 danmakuView.pause()
 ```
 
-Call stop() method to stop display danmaku and clean up resource. The memory associated with DanmakuKit is not cleaned up until this method is called. This method will be invoked when DanmakuView destroyed.
+调用stop()方法来停止展示弹幕并清理资源。与DanmakuKit相关的内存在该方法调用前不会释放。该方法会在DanmakuView销毁时调用。
 
 ```swift
 danmakuView.stop()
 ```
 
-### Gif Danmaku
+### Gif弹幕
 
-If you want to display GIF on a danmaku, then import the Gif subspec and use the DanmakuGifCell and DanmakuGifCellModel.
+如果想要在弹幕上展示Gif，可以引入Gif subspec并使用DanmakuGifCell和DanmakuGifCellModel。
 
-### Other Features
+### 更多功能
 
-See the Example project for more features.
+查看Example工程来了解更多功能。
 
 
-## Requirements
+## 使用要求
 
 swift 5.0+
 
 iOS 9.0+
 
-## Installation
+## 安装
 
-DanmakuKit is available through [CocoaPods](https://cocoapods.org). To install it, simply add the following line to your Podfile:
+DanmakuKit通过[CocoaPods](https://cocoapods.org)安装。添加如下代码到你的Podfile文件中即可安装。
 
 ```ruby
 pod 'DanmakuKit', '~> 1.3.0'
 ```
 
-## License
+## 许可证
 
-DanmakuKit is available under the MIT license. See the LICENSE file for more info.
+DanmakuKit使用MIT许可证，请查看LICENSE文件了解更多信息。
