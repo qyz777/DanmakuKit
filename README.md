@@ -14,9 +14,9 @@ DanmakuKit is a high performance library that provides the basic functions of da
 
 As shown in the GIF below, DanmakuKit offers three types of danmaku launch: floating, top and bottom.
 
-![Demo_0](./Images/demo_0.gif) 
+![Demo_0](https://raw.githubusercontent.com/qyz777/resource/master/danmakukit_demo_0.gif) 
 
-![Demo_1](./Images/demo_1.gif)
+![Demo_1](https://raw.githubusercontent.com/qyz777/resource/master/danmakukit_demo_1.gif)
 
 
 

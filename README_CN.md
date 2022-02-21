@@ -14,9 +14,9 @@ DanmakuKit是一个高性能弹幕框架，提供了弹幕相关的基础功能�
 
 如下GIF所示，DanmakuKit提供三种类型的弹幕：悬浮、置顶和置地。
 
-![Demo_0](./Images/demo_0.gif) 
+![Demo_0](https://raw.githubusercontent.com/qyz777/resource/master/danmakukit_demo_0.gif) 
 
-![Demo_1](./Images/demo_1.gif)
+![Demo_1](https://raw.githubusercontent.com/qyz777/resource/master/danmakukit_demo_1.gif)
 
 
 
