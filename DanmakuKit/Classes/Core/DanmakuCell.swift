@@ -56,6 +56,11 @@ open class DanmakuCell: UIView {
             layer.displayAsync = displayAsync
         }
     }
+    
+    /// This method can trigger the rendering process, the content can be re-rendered in the displaying(_:_:_:) method.
+    public func redraw() {
+        layer.setNeedsDisplay()
+    }
        
 }
 
