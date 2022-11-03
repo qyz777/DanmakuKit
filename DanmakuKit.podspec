@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'DanmakuKit'
-  s.version          = '1.3.3'
+  s.version          = '1.3.4'
   s.summary          = 'DanmakuKit is a tool for rapid development of danmaku functions.'
 
 # This description is used to generate tags and improve search results.
