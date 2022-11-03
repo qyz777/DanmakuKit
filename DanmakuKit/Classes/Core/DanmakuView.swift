@@ -214,16 +214,14 @@ public class DanmakuView: UIView {
         
         for i in (0..<subviews.count).reversed() {
             let subView = subviews[i]
+            var newPoint: CGPoint
             if subView.layer.animationKeys() != nil, let presentationLayer = subView.layer.presentation() {
-                let newPoint = layer.convert(point, to: presentationLayer)
-                if presentationLayer.contains(newPoint) {
-                    return subView
-                }
+                newPoint = layer.convert(point, to: presentationLayer)
             } else {
-                let newPoint = convert(point, to: subView)
-                if let findView = subView.hitTest(newPoint, with: event) {
-                    return findView
-                }
+                newPoint = convert(point, to: subView)
+            }
+            if let findView = subView.hitTest(newPoint, with: event) {
+                return findView
             }
         }
         return nil
