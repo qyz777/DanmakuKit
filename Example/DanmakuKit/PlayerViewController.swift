@@ -61,7 +61,7 @@ class PlayerViewController: UIViewController {
         playr.frame = view.bounds
         danmakuView.frame = view.bounds
         coverView.frame = view.bounds
-        danmakuView.recaculateTracks()
+        danmakuView.recalculateTracks()
         
         scaleButton.bounds.size = CGSize(width: 40, height: 40)
         scaleButton.frame.origin = CGPoint(x: coverView.bounds.width - scaleButton.bounds.width - 15, y: coverView.bounds.height - scaleButton.bounds.height - 15)
@@ -149,7 +149,7 @@ class PlayerViewController: UIViewController {
             self.view.transform = .identity
             self.view.frame = rootViewController.view.bounds
             self.view.setNeedsLayout()
-            self.danmakuView.recaculateTracks()
+            self.danmakuView.recalculateTracks()
             self.isFullScreen = true
         }
     }
@@ -174,7 +174,7 @@ class PlayerViewController: UIViewController {
             self.view.transform = .identity
             self.view.frame = self.originalFrame
             self.view.setNeedsLayout()
-            self.danmakuView.recaculateTracks()
+            self.danmakuView.recalculateTracks()
             self.isFullScreen = false
             self.originalWindow?.makeKeyAndVisible()
             self.originalParent = nil

@@ -8,7 +8,6 @@
 
 import UIKit
 import AVFoundation
-import KVOController
 
 public enum PlayerViewStatus {
     case playing
@@ -61,6 +60,8 @@ public class PlayerView: UIView {
     private var timeObserver: Any?
     
     private var currentItem: AVPlayerItem?
+    
+    private var observers: [Any] = []
 
     public init() {
         super.init(frame: .zero)
@@ -101,19 +102,19 @@ public class PlayerView: UIView {
         //变速时为了时player支持声音变速需要设置audioTimePitchAlgorithm
         currentItem?.audioTimePitchAlgorithm = .varispeed
         player.replaceCurrentItem(with: currentItem)
-        kvoControllerNonRetaining.observe(currentItem!, keyPath: "status", options: [.initial, .new]) { [weak self] (_, _, change) in
-            let status = AVPlayerItem.Status(rawValue: (change["new"] as! NSNumber).intValue)!
+        observers.removeAll()
+        observers.append(item.publisher(for: \.status).sink { [weak self] in
             if let strongSelf = self {
                 //转发播放器状态出去
-                if status == .readyToPlay {
+                if $0 == .readyToPlay {
                     //转发视频时间出去
                     let duration = strongSelf.currentItem!.asset.duration.seconds
                     strongSelf.delegate?.player(strongSelf, didLoadVideoWith: duration)
-                } else if status == .failed || status == .unknown {
+                } else if $0 == .failed || $0 == .unknown {
                     strongSelf.delegate?.player(strongSelf, loadVideoFailWith: strongSelf.currentItem!.error?.localizedDescription ?? "")
                 }
             }
-        }
+        })
     }
     
     private func updatePlayerLayer() {
@@ -153,6 +154,7 @@ public extension PlayerView {
         }
         status = .stop
         player.cancelPendingPrerolls()
+        observers.removeAll()
         delegate?.player(self, statusDidChange: status)
     }
     

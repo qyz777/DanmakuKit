@@ -80,7 +80,7 @@ public class DanmakuView: UIView {
     public var trackHeight: CGFloat = 20 {
         didSet {
             guard oldValue != trackHeight else { return }
-            recaculateTracks()
+            recalculateTracks()
         }
     }
     
@@ -88,7 +88,7 @@ public class DanmakuView: UIView {
     public var paddingTop: CGFloat = 0 {
         didSet {
             guard oldValue != paddingTop else { return }
-            recaculateTracks()
+            recalculateTracks()
         }
     }
     
@@ -96,7 +96,7 @@ public class DanmakuView: UIView {
     public var paddingBottom: CGFloat = 0 {
         didSet {
             guard oldValue != paddingBottom else { return }
-            recaculateTracks()
+            recalculateTracks()
         }
     }
     
@@ -110,7 +110,7 @@ public class DanmakuView: UIView {
         }
         didSet {
             guard oldValue != displayArea else { return }
-            recaculateTracks()
+            recalculateTracks()
         }
     }
     
@@ -198,7 +198,7 @@ public class DanmakuView: UIView {
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        recaculateTracks()
+        recalculateTracks()
     }
     
     required init?(coder: NSCoder) {
@@ -289,10 +289,10 @@ public extension DanmakuView {
     }
     
     /// You can call this method when you need to change the size of the danmakuView.
-    func recaculateTracks() {
-        recaculateFloatingTracks()
-        recaculateTopTracks()
-        recaculateBottomTracks()
+    func recalculateTracks() {
+        recalculateFloatingTracks()
+        recalculateTopTracks()
+        recalculateBottomTracks()
     }
     
     
@@ -440,7 +440,7 @@ public extension DanmakuView {
 
 private extension DanmakuView {
     
-    func recaculateFloatingTracks() {
+    func recalculateFloatingTracks() {
         let trackCount = Int(floorf(Float((viewHeight - paddingTop - paddingBottom) / trackHeight)))
         let offsetY = max(0, (viewHeight - CGFloat(trackCount) * trackHeight) / 2.0)
         let diffFloatingTrackCount = trackCount - floatingTracks.count
@@ -465,7 +465,7 @@ private extension DanmakuView {
         }
     }
     
-    func recaculateTopTracks() {
+    func recalculateTopTracks() {
         let trackCount = Int(floorf(Float((viewHeight - paddingTop - paddingBottom) / trackHeight)))
         let offsetY = max(0, (viewHeight - CGFloat(trackCount) * trackHeight) / 2.0)
         let diffFloatingTrackCount = trackCount - topTracks.count
@@ -490,7 +490,7 @@ private extension DanmakuView {
         }
     }
     
-    func recaculateBottomTracks() {
+    func recalculateBottomTracks() {
         let trackCount = Int(floorf(Float((viewHeight - paddingTop - paddingBottom) / trackHeight)))
         let offsetY = max(0, (viewHeight - CGFloat(trackCount) * trackHeight) / 2.0)
         let diffFloatingTrackCount = trackCount - bottomTracks.count
@@ -624,9 +624,15 @@ private extension DanmakuView {
     func cellPlayingStop(_ cell: DanmakuCell) {
         guard let cs = cell.model?.cellClass else { return }
         delegate?.danmakuView(self, didEndDisplaying: cell)
-        if var array = danmakuPool[NSStringFromClass(cs)], enableCellReusable {
-            array.append(cell)
+        if enableCellReusable {
+            var array = danmakuPool[NSStringFromClass(cs)]
+            if array == nil {
+                array = []
+            }
+            array?.append(cell)
             danmakuPool[NSStringFromClass(cs)] = array
+        } else {
+            cell.removeFromSuperview()
         }
     }
     
