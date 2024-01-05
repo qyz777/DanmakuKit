@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'DanmakuKit'
-  s.version          = '1.4.0'
+  s.version          = '1.4.1'
   s.summary          = 'DanmakuKit is a tool for rapid development of danmaku functions.'
 
 # This description is used to generate tags and improve search results.
@@ -26,16 +26,16 @@ Pod::Spec.new do |s|
   s.author           = { 'qyz777' => 'qyizhong1998@gmail.com' }
   s.source           = { :git => 'https://github.com/qyz777/DanmakuKit.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '10.0'
   s.swift_versions = ['5.0']
   s.default_subspecs = ['Core']
   
   s.subspec 'Core' do |ss|
-    ss.source_files = 'DanmakuKit/Classes/Core/**/*'
+    ss.source_files = 'Sources/DanmakuKit/Classes/Core/**/*'
   end
   
   s.subspec 'Gif' do |ss|
-    ss.source_files = 'DanmakuKit/Classes/Gif/**/*'
+    ss.source_files = 'Sources/DanmakuKit/Classes/Gif/**/*'
     ss.dependency 'DanmakuKit/Core'
   end
   

@@ -155,10 +155,25 @@ iOS 9.0+
 
 ## Installation
 
+### Cocoapods
+
 DanmakuKit is available through [CocoaPods](https://cocoapods.org). To install it, simply add the following line to your Podfile:
 
 ```ruby
 pod 'DanmakuKit', '~> 1.3.0'
+```
+
+### Swift Package Manager
+
+DanmakuKit is also available through [Swift Package Manager](https://github.com/apple/swift-package-manager). To install it, simply add the dependency to your Package.Swift file:
+
+```
+dependencies: [
+    .package(url: "https://github.com/qyz777/DanmakuKit.git", from: "1.4.1"),
+],
+targets: [
+    .target( name: "YourTarget", dependencies: ["DanmakuKit"]),
+]
 ```
 
 ## License
