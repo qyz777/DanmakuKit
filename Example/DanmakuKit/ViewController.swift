@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 let SCREEN_WIDTH = UIScreen.main.bounds.width
 let SCREEN_HEIGHT = UIScreen.main.bounds.height
@@ -45,7 +46,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             cell.textLabel?.text = "Function demo"
         } else if indexPath.row == 1 {
             cell.textLabel?.text = "Function demo of player"
-        }
+        } 
+//        else if indexPath.row == 2 {
+//            cell.textLabel?.text = "SwiftUI demo"
+//        }
         return cell
     }
     
@@ -55,21 +59,13 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             let vc = FunctionDemoViewController()
             navigationController?.pushViewController(vc, animated: true)
         } else if indexPath.row == 1 {
-            let vc = PlayerDemoViewController()
+            let vc = UIHostingController(rootView: PlayerExampleView())
             navigationController?.pushViewController(vc, animated: true)
-        }
-    }
-    
-}
-
-class NavigationController: UINavigationController {
-    
-    override var shouldAutorotate: Bool {
-        return false
-    }
-    
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .portrait
+        } 
+//        else if indexPath.row == 2 {
+//            let vc = UIHostingController(rootView: ExampleView())
+//            navigationController?.pushViewController(vc, animated: true)
+//        }
     }
     
 }

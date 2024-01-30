@@ -8,6 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		0F86ADA94E489E311FF27E0B /* Pods_DanmakuKit_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D101944CD8F2023168DF50E /* Pods_DanmakuKit_Tests.framework */; };
+		2BAA882F2B6754AC00276535 /* PlayerExampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAA882E2B6754AC00276535 /* PlayerExampleView.swift */; };
+		2BAA88332B6755B300276535 /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAA88312B6755B300276535 /* VideoPlayerViewController.swift */; };
+		2BAA88342B6755B300276535 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAA88322B6755B300276535 /* VideoPlayerView.swift */; };
+		2BAA88362B67569000276535 /* PlayerComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAA88352B67569000276535 /* PlayerComponent.swift */; };
+		2BAA88382B6756D400276535 /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAA88372B6756D400276535 /* Component.swift */; };
+		2BAA883A2B67570100276535 /* PlayerComponentRegister.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAA88392B67570100276535 /* PlayerComponentRegister.swift */; };
+		2BAA883F2B67A01300276535 /* PlayerCenterProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAA883C2B67A01300276535 /* PlayerCenterProgressView.swift */; };
+		2BAA88402B67A01300276535 /* VideoPlayerProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAA883D2B67A01300276535 /* VideoPlayerProgressView.swift */; };
+		2BAA88412B67A01300276535 /* PlayerControlComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAA883E2B67A01300276535 /* PlayerControlComponent.swift */; };
+		2BAA88442B67A0C400276535 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAA88432B67A0C400276535 /* Utils.swift */; };
+		2BAA88462B67A15500276535 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAA88452B67A15500276535 /* GradientView.swift */; };
+		2BAA88482B67A18100276535 /* AppColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAA88472B67A18100276535 /* AppColor.swift */; };
+		2BAA884A2B67A58A00276535 /* ExampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAA88492B67A58A00276535 /* ExampleView.swift */; };
+		2BAA884D2B68916000276535 /* DanmakuComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAA884C2B68916000276535 /* DanmakuComponent.swift */; };
 		4EB8A543E94068F6F5D0D547 /* Pods_DanmakuKit_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26D2089B0AB2D8D386FC641F /* Pods_DanmakuKit_Example.framework */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
@@ -21,9 +35,6 @@
 		A076E08324FA80B200A8FC06 /* DanmakuTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A076E08224FA80B200A8FC06 /* DanmakuTextCell.swift */; };
 		A076E08524FA80C800A8FC06 /* DanmakuTextCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A076E08424FA80C800A8FC06 /* DanmakuTextCellModel.swift */; };
 		A076E08724FB79B300A8FC06 /* FunctionDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A076E08624FB79B300A8FC06 /* FunctionDemoViewController.swift */; };
-		A0A0EB53252567B00078080E /* PlayerDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A0EB52252567B00078080E /* PlayerDemoViewController.swift */; };
-		A0A0EB55252568290078080E /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A0EB54252568290078080E /* PlayerView.swift */; };
-		A0A0EB5725256A320078080E /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A0EB5625256A320078080E /* PlayerViewController.swift */; };
 		A0A0EB5925256B880078080E /* demo.MOV in Resources */ = {isa = PBXBuildFile; fileRef = A0A0EB5825256B880078080E /* demo.MOV */; };
 		A0A0EB5B252896C00078080E /* danmaku.json in Resources */ = {isa = PBXBuildFile; fileRef = A0A0EB5A252896C00078080E /* danmaku.json */; };
 		A0A0EB5D252896D00078080E /* DanmakuService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A0EB5C252896D00078080E /* DanmakuService.swift */; };
@@ -44,6 +55,20 @@
 		1DCAB33335F0AD2638CF0E0D /* DanmakuKit.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = DanmakuKit.podspec; path = ../DanmakuKit.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		1FA9FDB9BDA6785F330F9ACD /* Pods-DanmakuKit_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DanmakuKit_Tests.release.xcconfig"; path = "Target Support Files/Pods-DanmakuKit_Tests/Pods-DanmakuKit_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		26D2089B0AB2D8D386FC641F /* Pods_DanmakuKit_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DanmakuKit_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BAA882E2B6754AC00276535 /* PlayerExampleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerExampleView.swift; sourceTree = "<group>"; };
+		2BAA88312B6755B300276535 /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
+		2BAA88322B6755B300276535 /* VideoPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
+		2BAA88352B67569000276535 /* PlayerComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerComponent.swift; sourceTree = "<group>"; };
+		2BAA88372B6756D400276535 /* Component.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Component.swift; sourceTree = "<group>"; };
+		2BAA88392B67570100276535 /* PlayerComponentRegister.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerComponentRegister.swift; sourceTree = "<group>"; };
+		2BAA883C2B67A01300276535 /* PlayerCenterProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerCenterProgressView.swift; sourceTree = "<group>"; };
+		2BAA883D2B67A01300276535 /* VideoPlayerProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerProgressView.swift; sourceTree = "<group>"; };
+		2BAA883E2B67A01300276535 /* PlayerControlComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerControlComponent.swift; sourceTree = "<group>"; };
+		2BAA88432B67A0C400276535 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		2BAA88452B67A15500276535 /* GradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
+		2BAA88472B67A18100276535 /* AppColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppColor.swift; sourceTree = "<group>"; };
+		2BAA88492B67A58A00276535 /* ExampleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleView.swift; sourceTree = "<group>"; };
+		2BAA884C2B68916000276535 /* DanmakuComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuComponent.swift; sourceTree = "<group>"; };
 		50995B1A95020F1ED52DF199 /* Pods-DanmakuKit_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DanmakuKit_Example.release.xcconfig"; path = "Target Support Files/Pods-DanmakuKit_Example/Pods-DanmakuKit_Example.release.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* DanmakuKit_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DanmakuKit_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -61,9 +86,6 @@
 		A076E08224FA80B200A8FC06 /* DanmakuTextCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuTextCell.swift; sourceTree = "<group>"; };
 		A076E08424FA80C800A8FC06 /* DanmakuTextCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuTextCellModel.swift; sourceTree = "<group>"; };
 		A076E08624FB79B300A8FC06 /* FunctionDemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionDemoViewController.swift; sourceTree = "<group>"; };
-		A0A0EB52252567B00078080E /* PlayerDemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDemoViewController.swift; sourceTree = "<group>"; };
-		A0A0EB54252568290078080E /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
-		A0A0EB5625256A320078080E /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		A0A0EB5825256B880078080E /* demo.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = demo.MOV; sourceTree = "<group>"; };
 		A0A0EB5A252896C00078080E /* danmaku.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = danmaku.json; sourceTree = "<group>"; };
 		A0A0EB5C252896D00078080E /* DanmakuService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuService.swift; sourceTree = "<group>"; };
@@ -93,6 +115,57 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2BAA882D2B67548D00276535 /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				2BAA882E2B6754AC00276535 /* PlayerExampleView.swift */,
+				2BAA88492B67A58A00276535 /* ExampleView.swift */,
+			);
+			name = SwiftUI;
+			sourceTree = "<group>";
+		};
+		2BAA88302B67557E00276535 /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				2BAA884B2B68914400276535 /* Danmaku */,
+				2BAA88422B67A01F00276535 /* Foundation */,
+				2BAA883B2B67A01300276535 /* Control */,
+				2BAA88322B6755B300276535 /* VideoPlayerView.swift */,
+				2BAA88312B6755B300276535 /* VideoPlayerViewController.swift */,
+				2BAA88392B67570100276535 /* PlayerComponentRegister.swift */,
+			);
+			name = Player;
+			sourceTree = "<group>";
+		};
+		2BAA883B2B67A01300276535 /* Control */ = {
+			isa = PBXGroup;
+			children = (
+				2BAA883C2B67A01300276535 /* PlayerCenterProgressView.swift */,
+				2BAA883D2B67A01300276535 /* VideoPlayerProgressView.swift */,
+				2BAA883E2B67A01300276535 /* PlayerControlComponent.swift */,
+				2BAA88452B67A15500276535 /* GradientView.swift */,
+			);
+			path = Control;
+			sourceTree = "<group>";
+		};
+		2BAA88422B67A01F00276535 /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				2BAA88352B67569000276535 /* PlayerComponent.swift */,
+				2BAA88372B6756D400276535 /* Component.swift */,
+				2BAA88432B67A0C400276535 /* Utils.swift */,
+			);
+			path = Foundation;
+			sourceTree = "<group>";
+		};
+		2BAA884B2B68914400276535 /* Danmaku */ = {
+			isa = PBXGroup;
+			children = (
+				2BAA884C2B68916000276535 /* DanmakuComponent.swift */,
+			);
+			path = Danmaku;
+			sourceTree = "<group>";
+		};
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
@@ -117,6 +190,8 @@
 		607FACD21AFB9204008FA782 /* Example for DanmakuKit */ = {
 			isa = PBXGroup;
 			children = (
+				2BAA88302B67557E00276535 /* Player */,
+				2BAA882D2B67548D00276535 /* SwiftUI */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
@@ -126,12 +201,10 @@
 				A076E08224FA80B200A8FC06 /* DanmakuTextCell.swift */,
 				A076E08424FA80C800A8FC06 /* DanmakuTextCellModel.swift */,
 				A076E08624FB79B300A8FC06 /* FunctionDemoViewController.swift */,
-				A0A0EB52252567B00078080E /* PlayerDemoViewController.swift */,
-				A0A0EB54252568290078080E /* PlayerView.swift */,
-				A0A0EB5625256A320078080E /* PlayerViewController.swift */,
 				A0A0EB5C252896D00078080E /* DanmakuService.swift */,
 				A02A4FDC26DE79F900B5BD01 /* TestDanmakuCellModel.swift */,
 				A02A4FE426DE7A1400B5BD01 /* DanmakuTestGifCellModel.swift */,
+				2BAA88472B67A18100276535 /* AppColor.swift */,
 				A0A0EB5E252896D80078080E /* Resource */,
 			);
 			name = "Example for DanmakuKit";
@@ -384,17 +457,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A0A0EB53252567B00078080E /* PlayerDemoViewController.swift in Sources */,
-				A0A0EB5725256A320078080E /* PlayerViewController.swift in Sources */,
+				2BAA88362B67569000276535 /* PlayerComponent.swift in Sources */,
+				2BAA88462B67A15500276535 /* GradientView.swift in Sources */,
+				2BAA88332B6755B300276535 /* VideoPlayerViewController.swift in Sources */,
+				2BAA88412B67A01300276535 /* PlayerControlComponent.swift in Sources */,
+				2BAA88482B67A18100276535 /* AppColor.swift in Sources */,
 				A0A0EB5D252896D00078080E /* DanmakuService.swift in Sources */,
 				A076E08524FA80C800A8FC06 /* DanmakuTextCellModel.swift in Sources */,
-				A0A0EB55252568290078080E /* PlayerView.swift in Sources */,
+				2BAA88402B67A01300276535 /* VideoPlayerProgressView.swift in Sources */,
+				2BAA884A2B67A58A00276535 /* ExampleView.swift in Sources */,
 				A076E08724FB79B300A8FC06 /* FunctionDemoViewController.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				2BAA883A2B67570100276535 /* PlayerComponentRegister.swift in Sources */,
 				A076E08324FA80B200A8FC06 /* DanmakuTextCell.swift in Sources */,
 				A02A4FDD26DE79F900B5BD01 /* TestDanmakuCellModel.swift in Sources */,
+				2BAA883F2B67A01300276535 /* PlayerCenterProgressView.swift in Sources */,
 				A02A4FE526DE7A1400B5BD01 /* DanmakuTestGifCellModel.swift in Sources */,
+				2BAA88442B67A0C400276535 /* Utils.swift in Sources */,
+				2BAA88382B6756D400276535 /* Component.swift in Sources */,
+				2BAA882F2B6754AC00276535 /* PlayerExampleView.swift in Sources */,
+				2BAA884D2B68916000276535 /* DanmakuComponent.swift in Sources */,
+				2BAA88342B6755B300276535 /* VideoPlayerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -548,7 +632,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 437JAL24TE;
 				INFOPLIST_FILE = DanmakuKit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
@@ -565,7 +649,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 437JAL24TE;
 				INFOPLIST_FILE = DanmakuKit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
