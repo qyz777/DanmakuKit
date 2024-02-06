@@ -159,7 +159,7 @@ iOS 10.0+, SwiftUI iOS 14.0+
 DanmakuKit通过[CocoaPods](https://cocoapods.org)安装。添加如下代码到你的Podfile文件中即可安装。
 
 ```ruby
-pod 'DanmakuKit', '~> 1.4.0'
+pod 'DanmakuKit', '~> 1.5.0'
 ```
 
 ### Swift Package Manager
@@ -168,7 +168,7 @@ DanmakuKit也支持通过[Swift Package Manager](https://github.com/apple/swift-
 
 ```
 dependencies: [
-    .package(url: "https://github.com/qyz777/DanmakuKit.git", from: "1.4.2"),
+    .package(url: "https://github.com/qyz777/DanmakuKit.git", from: "1.5.0"),
 ],
 targets: [
     .target( name: "YourTarget", dependencies: ["DanmakuKit"]),
