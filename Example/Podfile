@@ -1,7 +1,7 @@
 use_frameworks!
 
 target 'DanmakuKit_Example' do
-  pod 'DanmakuKit', :path => '../', :subspecs => ['Core', 'Gif']
+  pod 'DanmakuKit', :path => '../', :subspecs => ['Core', 'Gif', 'SwiftUI']
   
   pod 'DeviceKit', '~> 4.0'
   pod 'SwiftyJSON', '~> 5.0.0'

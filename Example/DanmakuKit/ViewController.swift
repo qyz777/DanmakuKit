@@ -19,6 +19,11 @@ class ViewController: UIViewController {
         view.addSubview(tableView)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
     }
@@ -37,7 +42,7 @@ class ViewController: UIViewController {
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -46,10 +51,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             cell.textLabel?.text = "Function demo"
         } else if indexPath.row == 1 {
             cell.textLabel?.text = "Function demo of player"
-        } 
-//        else if indexPath.row == 2 {
-//            cell.textLabel?.text = "SwiftUI demo"
-//        }
+        } else if indexPath.row == 2 {
+            cell.textLabel?.text = "SwiftUI demo"
+        }
         return cell
     }
     
@@ -61,11 +65,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         } else if indexPath.row == 1 {
             let vc = UIHostingController(rootView: PlayerExampleView())
             navigationController?.pushViewController(vc, animated: true)
-        } 
-//        else if indexPath.row == 2 {
-//            let vc = UIHostingController(rootView: ExampleView())
-//            navigationController?.pushViewController(vc, animated: true)
-//        }
+        } else if indexPath.row == 2 {
+            let vc = UIHostingController(rootView: ExampleView())
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
 }

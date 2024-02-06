@@ -38,5 +38,10 @@ Pod::Spec.new do |s|
     ss.source_files = 'Sources/DanmakuKit/Classes/Gif/**/*'
     ss.dependency 'DanmakuKit/Core'
   end
+
+  s.subspec 'SwiftUI' do |ss|
+    ss.source_files = 'Sources/DanmakuKit/Classes/SwiftUI/**/*'
+    ss.dependency 'DanmakuKit/Core'
+  end
   
 end

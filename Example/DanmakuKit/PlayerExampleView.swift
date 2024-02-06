@@ -10,9 +10,7 @@ import SwiftUI
 
 struct PlayerExampleView: View {
     var body: some View {
-        VideoPlayer(videoModel: VideoModel(url: Bundle.main.url(forResource: "demo", withExtension: "MOV")?.absoluteString ?? "", title: "Demo")) { time in
-            
-        }
+        VideoPlayer(videoModel: VideoModel(url: Bundle.main.url(forResource: "demo", withExtension: "MOV")?.absoluteString ?? "", title: "Demo")) { _ in }
     }
 }
 

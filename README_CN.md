@@ -32,6 +32,7 @@ DanmakuKit是一个高性能弹幕框架，提供了弹幕相关的基础功能�
 - [x] 设置弹幕播放进度
 - [x] 清理所有弹幕
 - [x] Gif弹幕
+- [x] SwiftUI
 
 ## 使用指南
 
@@ -151,14 +152,27 @@ danmakuView.stop()
 
 swift 5.0+
 
-iOS 9.0+
+iOS 10.0+, SwiftUI iOS 14.0+
 
 ## 安装
 
 DanmakuKit通过[CocoaPods](https://cocoapods.org)安装。添加如下代码到你的Podfile文件中即可安装。
 
 ```ruby
-pod 'DanmakuKit', '~> 1.3.0'
+pod 'DanmakuKit', '~> 1.4.0'
+```
+
+### Swift Package Manager
+
+DanmakuKit也支持通过[Swift Package Manager](https://github.com/apple/swift-package-manager). 添加如下代码到你的Package.Swift即可安装:
+
+```
+dependencies: [
+    .package(url: "https://github.com/qyz777/DanmakuKit.git", from: "1.4.2"),
+],
+targets: [
+    .target( name: "YourTarget", dependencies: ["DanmakuKit"]),
+]
 ```
 
 ## 许可证

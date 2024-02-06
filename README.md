@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/cocoapods/l/DanmakuKit.svg?style=flat)](https://cocoapods.org/pods/DanmakuKit)
 [![Platform](https://img.shields.io/cocoapods/p/DanmakuKit.svg?style=flat)](https://cocoapods.org/pods/DanmakuKit)
 
-# DanmakuKit([中文](./README_CN.md))
+# DanmakuKit([简体中文](./README_CN.md))
 
 ## Introduction
 
@@ -32,6 +32,7 @@ As shown in the GIF below, DanmakuKit offers three types of danmaku launch: floa
 - [x] Support for setting progress property to render the danmaku immediately on the view
 - [x] Support to clean up all danmaku
 - [x] Support Gif Danmaku
+- [x] SwiftUI
 
 ## Use Guide
 
@@ -151,7 +152,7 @@ See the Example project for more features.
 
 swift 5.0+
 
-iOS 9.0+
+iOS 10.0+, SwiftUI iOS 14.0+
 
 ## Installation
 
