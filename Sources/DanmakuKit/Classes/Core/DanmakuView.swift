@@ -253,6 +253,9 @@ public extension DanmakuView {
         } else {
             guard let t = findSuitableTrack(for: danmaku) else {
                 delegate?.danmakuView(self, noSpaceShoot: danmaku)
+                if enableCellReusable {
+                    appendCellToPool(cell)
+                }
                 return
             }
             shootTrack = t
@@ -595,12 +598,7 @@ private extension DanmakuView {
     func obtainCell(with danmaku: DanmakuCellModel) -> DanmakuCell? {
         var cell: DanmakuCell?
         if enableCellReusable {
-            var cells = danmakuPool[NSStringFromClass(danmaku.cellClass)]
-            if cells == nil {
-                cells = []
-            }
-            cell = (cells?.count ?? 0) > 0 ? cells?.removeFirst() : nil
-            danmakuPool[NSStringFromClass(danmaku.cellClass)] = cells
+            cell = cellFromPool(danmaku)
         }
         
         let frame = CGRect(x: bounds.width, y: 0, width: danmaku.size.width, height: danmaku.size.height)
@@ -621,16 +619,33 @@ private extension DanmakuView {
         return cell
     }
     
+    func cellFromPool(_ danmaku: DanmakuCellModel) -> DanmakuCell? {
+        var cells = danmakuPool[NSStringFromClass(danmaku.cellClass)]
+        if cells == nil {
+            cells = []
+        }
+        let cell = (cells?.count ?? 0) > 0 ? cells?.removeFirst() : nil
+        danmakuPool[NSStringFromClass(danmaku.cellClass)] = cells
+        return cell
+    }
+    
+    func appendCellToPool(_ cell: DanmakuCell) {
+        guard let cs = cell.model?.cellClass else {
+            cell.removeFromSuperview()
+            return
+        }
+        var array = danmakuPool[NSStringFromClass(cs)]
+        if array == nil {
+            array = []
+        }
+        array?.append(cell)
+        danmakuPool[NSStringFromClass(cs)] = array
+    }
+    
     func cellPlayingStop(_ cell: DanmakuCell) {
-        guard let cs = cell.model?.cellClass else { return }
         delegate?.danmakuView(self, didEndDisplaying: cell)
         if enableCellReusable {
-            var array = danmakuPool[NSStringFromClass(cs)]
-            if array == nil {
-                array = []
-            }
-            array?.append(cell)
-            danmakuPool[NSStringFromClass(cs)] = array
+            self.appendCellToPool(cell)
         } else {
             cell.removeFromSuperview()
         }
