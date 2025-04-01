@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@available(iOS 14.0, *)
+@available(iOS 14.0, tvOS 14.0, *)
 public struct DanmakuViewAdapter: UIViewRepresentable {
     
     public typealias UIViewType = DanmakuView
