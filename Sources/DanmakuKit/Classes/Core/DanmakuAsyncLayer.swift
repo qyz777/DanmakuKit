@@ -77,7 +77,7 @@ public class DanmakuAsyncLayer: CALayer {
     }
     
     private func display(isAsync: Bool) {
-        guard displaying != nil else {
+        guard displaying != nil, bounds.size.width > 0, bounds.size.height > 0 else {
             willDisplay?(self)
             contents = nil
             didDisplay?(self, true)
