@@ -80,6 +80,7 @@
 		607FACE51AFB9204008FA782 /* DanmakuKit_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DanmakuKit_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
+		74E3E5792FE7EC48003C68D6 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = SOURCE_ROOT; };
 		A02A4FDC26DE79F900B5BD01 /* TestDanmakuCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestDanmakuCellModel.swift; sourceTree = "<group>"; };
 		A02A4FE026DE7A0100B5BD01 /* test.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = test.gif; sourceTree = "<group>"; };
 		A02A4FE426DE7A1400B5BD01 /* DanmakuTestGifCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DanmakuTestGifCellModel.swift; sourceTree = "<group>"; };
@@ -181,6 +182,7 @@
 		607FACD11AFB9204008FA782 /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				74E3E5792FE7EC48003C68D6 /* Podfile */,
 				607FACD01AFB9204008FA782 /* DanmakuKit_Example.app */,
 				607FACE51AFB9204008FA782 /* DanmakuKit_Tests.xctest */,
 			);

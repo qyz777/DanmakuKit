@@ -156,15 +156,17 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
         }) else { return false }
         #if os(macOS)
         if let layer = findCell.layer {
+            let pausedTime = layer.timeOffset
             layer.speed = 1.0
-            layer.timeOffset = 0
+            layer.timeOffset = 0.0
+            layer.beginTime = CACurrentMediaTime() - pausedTime
         }
         #else
         addAnimation(to: findCell)
         #endif
         return true
     }
-    
+
     func pause() {
         cells.forEach {
             let rf = $0.realFrame
@@ -176,7 +178,7 @@ class DanmakuFloatingTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
             #endif
         }
     }
-    
+
     func pause(_ danmaku: DanmakuCellModel) -> Bool {
         guard let findCell = cells.first(where: { (c) -> Bool in
             return c.model?.isEqual(to: danmaku) ?? false
@@ -366,15 +368,17 @@ class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
         }) else { return false }
         #if os(macOS)
         if let layer = findCell.layer {
+            let pausedTime = layer.timeOffset
             layer.speed = 1.0
-            layer.timeOffset = 0
+            layer.timeOffset = 0.0
+            layer.beginTime = CACurrentMediaTime() - pausedTime
         }
         #else
         addAnimation(to: findCell)
         #endif
         return true
     }
-    
+
     func pause() {
         cells.forEach {
             #if os(macOS)
@@ -384,7 +388,7 @@ class DanmakuVerticalTrack: NSObject, DanmakuTrack, CAAnimationDelegate {
             #endif
         }
     }
-    
+
     func pause(_ danmaku: DanmakuCellModel) -> Bool {
         guard let findCell = cells.first(where: { (c) -> Bool in
             return c.model?.isEqual(to: danmaku) ?? false
