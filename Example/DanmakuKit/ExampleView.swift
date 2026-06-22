@@ -194,19 +194,21 @@ struct ExamplePlayerView: UIViewRepresentable {
 }
 
 extension ExampleView.ExampleViewModel: DanmakuViewDelegate {
-    func danmakuView(_ danmakuView: DanmakuView, didToggled danmaku: any DanmakuCellModel) {
+    func danmakuView(_ danmakuView: DanmakuView, didToggled danmaku: DanmakuCell) {
         if danmakuView.status == .play,
-           danmaku.type == .floating
+           danmaku.model?.type == .floating,
+           let model = danmaku.model
         {
-            danmakuView.pause(danmaku)
+            danmakuView.pause(model)
         }
     }
-    
-    func danmakuView(_ danmakuView: DanmakuView, stopToggled danmaku: any DanmakuCellModel) {
+
+    func danmakuView(_ danmakuView: DanmakuView, stopToggled danmaku: DanmakuCell) {
         if danmakuView.status == .play,
-           danmaku.type == .floating
+           danmaku.model?.type == .floating,
+           let model = danmaku.model
         {
-            danmakuView.play(danmaku)
+            danmakuView.play(model)
         }
     }
 }

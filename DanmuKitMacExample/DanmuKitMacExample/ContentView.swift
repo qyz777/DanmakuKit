@@ -318,12 +318,16 @@ class DanmakuDelegate: DanmakuViewDelegate {
         print("Reusing danmaku cell")
     }
     
-    func danmakuView(_ danmakuView: DanmakuView, didHovered danmaku: any DanmakuCellModel) {
-        danmakuView.pause(danmaku)
+    func danmakuView(_ danmakuView: DanmakuView, didHovered danmaku: DanmakuCell) {
+        if let model = danmaku.model {
+            danmakuView.pause(model)
+        }
     }
-    
-    func danmakuView(_ danmakuView: DanmakuView, stopHovered danmaku: any DanmakuCellModel) {
-        danmakuView.play(danmaku)
+
+    func danmakuView(_ danmakuView: DanmakuView, stopHovered danmaku: DanmakuCell) {
+        if let model = danmaku.model {
+            danmakuView.play(model)
+        }
     }
 }
 
