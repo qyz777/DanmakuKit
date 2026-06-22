@@ -50,6 +50,8 @@ public protocol DanmakuViewDelegate: AnyObject {
     ///   - danmaku:  cellModel of danmaku
     func danmakuView(_ danmakuView: DanmakuView, noSpaceSync danmaku: DanmakuCellModel)
     
+#if os(macOS)
+    
     /// This method is called when the danmaku hovered in macOS
     /// - Parameters:
     ///   - danmakuView: view of the danmaku
@@ -61,14 +63,16 @@ public protocol DanmakuViewDelegate: AnyObject {
     ///   - danmakuView: view of the danmaku
     ///   - danmaku:  cellModel of danmaku
     func danmakuView(_ danmakuView: DanmakuView, stopHovered danmaku: DanmakuCellModel)
-
-    /// This method is called when the danmaku is toggled by click in macOS
+    
+#endif
+    
+    /// This method is called when the danmaku is toggled by tap
     /// - Parameters:
     ///   - danmakuView: view of the danmaku
     ///   - danmaku:  cellModel of danmaku
     func danmakuView(_ danmakuView: DanmakuView, didToggled danmaku: DanmakuCellModel)
-
-    /// This method is called when the danmaku stop toggled in macOS
+    
+    /// This method is called when the danmaku stop toggled
     /// - Parameters:
     ///   - danmakuView: view of the danmaku
     ///   - danmaku:  cellModel of danmaku
@@ -88,15 +92,15 @@ public extension DanmakuViewDelegate {
     func danmakuView(_ danmakuView: DanmakuView, didTapped danmaku: DanmakuCell) {}
     
     func danmakuView(_ danmakuView: DanmakuView, noSpaceSync danmaku: DanmakuCellModel) {}
-
+#if os(macOS)
     func danmakuView(_ danmakuView: DanmakuView, didHovered danmaku: DanmakuCellModel) {}
-
+    
     func danmakuView(_ danmakuView: DanmakuView, stopHovered danmaku: DanmakuCellModel) {}
-
+#endif
     func danmakuView(_ danmakuView: DanmakuView, didToggled danmaku: DanmakuCellModel) {}
-
+    
     func danmakuView(_ danmakuView: DanmakuView, stopToggled danmaku: DanmakuCellModel) {}
-
+    
 }
 
 public enum DanmakuStatus {
@@ -232,7 +236,9 @@ public class DanmakuView: PlatformView {
     
     private var toggledCell: DanmakuCellModel?
     
+#if os(macOS)
     private var hoveredCell: DanmakuCellModel?
+#endif
     
     private var viewHeight: CGFloat {
         return bounds.height * displayArea
@@ -295,12 +301,12 @@ public class DanmakuView: PlatformView {
         window?.acceptsMouseMovedEvents = true
         setupHoverTracking()
     }
-
+    
     public override func updateTrackingAreas() {
         super.updateTrackingAreas()
         setupHoverTracking()
     }
-
+    
     private func setupHoverTracking() {
         trackingAreas.forEach { removeTrackingArea($0) }
         let area = NSTrackingArea(
@@ -328,7 +334,21 @@ public class DanmakuView: PlatformView {
         super.mouseExited(with: event)
         stopCurrentHovered()
     }
-
+    
+    private func switchCurrentHovered(_ model: DanmakuCellModel) {
+        guard model.identifier != hoveredCell?.identifier else { return }
+        stopCurrentHovered()
+        hoveredCell = model
+        delegate?.danmakuView(self, didHovered: model)
+    }
+    
+    private func stopCurrentHovered() {
+        if let old = hoveredCell {
+            delegate?.danmakuView(self, stopHovered: old)
+        }
+        hoveredCell = nil
+    }
+    
 #else
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard self.point(inside: point, with: event) else { return nil }
@@ -346,34 +366,20 @@ public class DanmakuView: PlatformView {
     }
 #endif
     
-    private func switchCurrentHovered(_ model: DanmakuCellModel) {
-        guard model.identifier != hoveredCell?.identifier else { return }
-        stopCurrentHovered()
-        hoveredCell = model
-        delegate?.danmakuView(self, didHovered: model)
-    }
-    
-    private func stopCurrentHovered() {
-        if let old = hoveredCell {
-            delegate?.danmakuView(self, stopHovered: old)
-        }
-        hoveredCell = nil
-    }
-
     private func switchCurrentToggled(_ model: DanmakuCellModel) {
         guard model.identifier != toggledCell?.identifier else { return }
         stopCurrentToggled()
         toggledCell = model
         delegate?.danmakuView(self, didToggled: model)
     }
-
+    
     private func stopCurrentToggled() {
         if let old = toggledCell {
             delegate?.danmakuView(self, stopToggled: old)
         }
         toggledCell = nil
     }
-
+    
 }
 
 public extension DanmakuView {
@@ -571,7 +577,9 @@ public extension DanmakuView {
         floatingTracks.forEach { $0.clean() }
         bottomTracks.forEach { $0.clean() }
         topTracks.forEach { $0.clean() }
+#if os(macOS)
         hoveredCell = nil
+#endif
         toggledCell = nil
     }
     
@@ -825,13 +833,13 @@ private extension DanmakuView {
     }
     
     func cellPlayingStop(_ cell: DanmakuCell) {
-        #if os(macOS)
+#if os(macOS)
         // Clean up hovered state if this cell was being hovered
         if let model = cell.model,
            model.identifier == hoveredCell?.identifier {
             stopCurrentHovered()
         }
-        #endif
+#endif
         // Clean up toggled state (cross-platform)
         if let model = cell.model,
            model.identifier == toggledCell?.identifier {
@@ -860,5 +868,5 @@ private extension DanmakuView {
         }
     }
 #endif
-
+    
 }
