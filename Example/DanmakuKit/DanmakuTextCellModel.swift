@@ -12,7 +12,7 @@ import SwiftyJSON
 
 class DanmakuTextCellModel: DanmakuCellModel, TestDanmakuCellModel, Equatable {
     
-    var identifier = ""
+    var identifier = UUID().uuidString
     
     var text = ""
     

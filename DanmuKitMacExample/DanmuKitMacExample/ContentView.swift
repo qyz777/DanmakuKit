@@ -82,14 +82,24 @@ struct ContentView: View {
 
             // Danmaku View
             ZStack(alignment: .topLeading) {
-                DanmakuViewAdapter(coordinator: coordinator)
-                    .frame(minWidth: 400, maxWidth: .infinity, minHeight: 300, maxHeight: .infinity)
-                    .background(Color.black)
-                    .cornerRadius(8)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color.purple, lineWidth: 1)
-                    )
+                DanmakuViewAdapter(coordinator: coordinator) {
+                    Rectangle()
+                        .fill(.blue)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .contextMenu {
+                            Text("Context_Menu")
+                        }
+                        .onTapGesture(count: 2) {
+                            print("[Adapter] InnerView tapped")
+                        }
+                }
+                .frame(minWidth: 400, maxWidth: .infinity, minHeight: 300, maxHeight: .infinity)
+                .background(Color.black)
+                .cornerRadius(8)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color.purple, lineWidth: 1)
+                )
 
                 // FPS overlay
                 Text("FPS: \(Int(round(fpsMonitor.fps)))")
@@ -306,6 +316,18 @@ class DanmakuDelegate: DanmakuViewDelegate {
 
     func danmakuView(_ danmakuView: DanmakuView, dequeueReusable danmaku: DanmakuCell) {
         print("Reusing danmaku cell")
+    }
+    
+    func danmakuView(_ danmakuView: DanmakuView, didHovered danmaku: DanmakuCell) {
+        if let model = danmaku.model {
+            danmakuView.pause(model)
+        }
+    }
+
+    func danmakuView(_ danmakuView: DanmakuView, stopHovered danmaku: DanmakuCell) {
+        if let model = danmaku.model {
+            danmakuView.play(model)
+        }
     }
 }
 

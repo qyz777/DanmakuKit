@@ -50,6 +50,33 @@ public protocol DanmakuViewDelegate: AnyObject {
     ///   - danmaku:  cellModel of danmaku
     func danmakuView(_ danmakuView: DanmakuView, noSpaceSync danmaku: DanmakuCellModel)
     
+#if os(macOS)
+
+    /// This method is called when the danmaku hovered in macOS
+    /// - Parameters:
+    ///   - danmakuView: view of the danmaku
+    ///   - danmaku:  cell of danmaku
+    func danmakuView(_ danmakuView: DanmakuView, didHovered danmaku: DanmakuCell)
+
+    /// This method is called when the danmaku stop hovered in macOS
+    /// - Parameters:
+    ///   - danmakuView: view of the danmaku
+    ///   - danmaku:  cell of danmaku
+    func danmakuView(_ danmakuView: DanmakuView, stopHovered danmaku: DanmakuCell)
+
+#endif
+
+    /// This method is called when the danmaku is toggled by tap
+    /// - Parameters:
+    ///   - danmakuView: view of the danmaku
+    ///   - danmaku:  cell of danmaku
+    func danmakuView(_ danmakuView: DanmakuView, didToggled danmaku: DanmakuCell)
+
+    /// This method is called when the danmaku stop toggled
+    /// - Parameters:
+    ///   - danmakuView: view of the danmaku
+    ///   - danmaku:  cell of danmaku
+    func danmakuView(_ danmakuView: DanmakuView, stopToggled danmaku: DanmakuCell)
 }
 
 public extension DanmakuViewDelegate {
@@ -65,6 +92,14 @@ public extension DanmakuViewDelegate {
     func danmakuView(_ danmakuView: DanmakuView, didTapped danmaku: DanmakuCell) {}
     
     func danmakuView(_ danmakuView: DanmakuView, noSpaceSync danmaku: DanmakuCellModel) {}
+#if os(macOS)
+    func danmakuView(_ danmakuView: DanmakuView, didHovered danmaku: DanmakuCell) {}
+    
+    func danmakuView(_ danmakuView: DanmakuView, stopHovered danmaku: DanmakuCell) {}
+#endif
+    func danmakuView(_ danmakuView: DanmakuView, didToggled danmaku: DanmakuCell) {}
+    
+    func danmakuView(_ danmakuView: DanmakuView, stopToggled danmaku: DanmakuCell) {}
     
 }
 
@@ -199,6 +234,12 @@ public class DanmakuView: PlatformView {
     
     private var bottomTracks: [DanmakuTrack] = []
     
+    private var toggledCell: DanmakuCell?
+
+#if os(macOS)
+    private var hoveredCell: DanmakuCell?
+#endif
+    
     private var viewHeight: CGFloat {
         return bounds.height * displayArea
     }
@@ -206,17 +247,23 @@ public class DanmakuView: PlatformView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         recalculateTracks()
-        #if os(macOS)
-        // iOS 侧有“presentation 命中”的链路，系统配合更友好；macOS 侧如果仅靠 cell 的 NSClickGestureRecognizer，很容易因为动画导致的“视图/图层几何不一致”而 miss。所以在这里处理
+        // 统一用父级视图的GestureRegnizer管理子视图点击事件
+#if os(macOS)
         let containerClick = NSClickGestureRecognizer(target: self, action: #selector(containerDidClick(_:)))
+        containerClick.delaysPrimaryMouseButtonEvents = false
         self.addGestureRecognizer(containerClick)
-        #endif
+#else
+        let bgTap = UITapGestureRecognizer(target: self, action: #selector(danmakuDidTap(_:)))
+        bgTap.delaysTouchesBegan = false
+        bgTap.delaysTouchesEnded = false
+        self.addGestureRecognizer(bgTap)
+#endif
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
-    #if os(macOS)
+#if os(macOS)
     // Use a top-left origin like iOS so tracks are laid out from the top.
     public override var isFlipped: Bool { true }
     
@@ -224,13 +271,18 @@ public class DanmakuView: PlatformView {
         super.layout()
         recalculateTracks()
     }
-    #endif
+#else
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        recalculateTracks()
+    }
+#endif
     
     deinit {
         stop()
     }
     
-    #if os(macOS)
+#if os(macOS)
     public override func hitTest(_ point: NSPoint) -> NSView? {
         guard !isHidden, alphaValue > 0 else { return nil }
         guard self.bounds.contains(point) else { return nil }
@@ -243,7 +295,59 @@ public class DanmakuView: PlatformView {
         }
         return self
     }
-    #else
+    
+    public override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        window?.acceptsMouseMovedEvents = true
+        setupHoverTracking()
+    }
+    
+    public override func updateTrackingAreas() {
+        super.updateTrackingAreas()
+        setupHoverTracking()
+    }
+    
+    private func setupHoverTracking() {
+        trackingAreas.forEach { removeTrackingArea($0) }
+        let area = NSTrackingArea(
+            rect: bounds,
+            options: [.mouseEnteredAndExited, .mouseMoved, .activeAlways, .inVisibleRect],
+            owner: self,
+            userInfo: nil
+        )
+        addTrackingArea(area)
+    }
+    
+    public override func mouseMoved(with event: NSEvent) {
+        super.mouseMoved(with: event)
+        let point = convert(event.locationInWindow, from: nil)
+        if let cell = locateDanmakuCell(at: point) {
+            switchCurrentHovered(cell)
+        } else {
+            stopCurrentHovered()
+        }
+    }
+    
+    public override func mouseExited(with event: NSEvent) {
+        super.mouseExited(with: event)
+        stopCurrentHovered()
+    }
+    
+    private func switchCurrentHovered(_ cell: DanmakuCell) {
+        guard cell !== hoveredCell else { return }
+        stopCurrentHovered()
+        hoveredCell = cell
+        delegate?.danmakuView(self, didHovered: cell)
+    }
+    
+    private func stopCurrentHovered() {
+        if let old = hoveredCell {
+            delegate?.danmakuView(self, stopHovered: old)
+        }
+        hoveredCell = nil
+    }
+    
+#else
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard self.point(inside: point, with: event) else { return nil }
         for i in (0..<subviews.count).reversed() {
@@ -256,9 +360,23 @@ public class DanmakuView: PlatformView {
             }
             if let findView = subView.hitTest(newPoint, with: event) { return findView }
         }
-        return nil
+        return self
     }
-    #endif
+#endif
+    
+    private func switchCurrentToggled(_ cell: DanmakuCell) {
+        guard cell !== toggledCell else { return }
+        stopCurrentToggled()
+        toggledCell = cell
+        delegate?.danmakuView(self, didToggled: cell)
+    }
+    
+    private func stopCurrentToggled() {
+        if let old = toggledCell {
+            delegate?.danmakuView(self, stopToggled: old)
+        }
+        toggledCell = nil
+    }
     
 }
 
@@ -457,6 +575,10 @@ public extension DanmakuView {
         floatingTracks.forEach { $0.clean() }
         bottomTracks.forEach { $0.clean() }
         topTracks.forEach { $0.clean() }
+#if os(macOS)
+        hoveredCell = nil
+#endif
+        toggledCell = nil
     }
     
     /// When you change some properties of the danmakuView or cellModel that might affect the danmaku, you must make changes in the closure of this method.
@@ -549,11 +671,11 @@ private extension DanmakuView {
             let index = bottomTracks.count - i - 1
             track.index = UInt(index)
             track.playingSpeed = playingSpeed
-            #if os(macOS)
+#if os(macOS)
             track.positionY = bounds.height - CGFloat(index) * trackHeight - trackHeight / 2.0 - paddingBottom - offsetY
-            #else
+#else
             track.positionY = bounds.height - CGFloat(index) * trackHeight - trackHeight / 2.0 - paddingTop - offsetY
-            #endif
+#endif
         }
     }
     
@@ -647,12 +769,6 @@ private extension DanmakuView {
             }
             cell = cls.init(frame: frame)
             cell?.model = danmaku
-            #if os(macOS)
-            // Use container-level click recognizer only
-            #else
-            let tap = UITapGestureRecognizer(target: self, action: #selector(danmakuDidTap(_:)))
-            cell?.addGestureRecognizer(tap)
-            #endif
         } else {
             cell?.frame = frame
             cell?.model = danmaku
@@ -671,10 +787,21 @@ private extension DanmakuView {
         return cell
     }
     
-    #if os(macOS)
+#if os(macOS)
     @objc
     private func containerDidClick(_ gesture: NSClickGestureRecognizer) {
         let p = gesture.location(in: self)
+        if let cell = locateDanmakuCell(at: p) {
+            delegate?.danmakuView(self, didTapped: cell)
+            switchCurrentToggled(cell)
+        } else {
+            // Click on empty space → clear toggled cell
+            stopCurrentToggled()
+        }
+    }
+#endif
+    
+    private func locateDanmakuCell(at p: PlatformPoint) -> DanmakuCell? {
         for sub in subviews.reversed() {
             guard let cell = sub as? DanmakuCell else { continue }
             let rf = cell.realFrame
@@ -683,12 +810,11 @@ private extension DanmakuView {
                               width: cell.bounds.width,
                               height: cell.bounds.height)
             if rect.contains(p) {
-                delegate?.danmakuView(self, didTapped: cell)
-                break
+                return cell
             }
         }
+        return nil
     }
-    #endif
     
     func appendCellToPool(_ cell: DanmakuCell) {
         guard let cs = cell.model?.cellClass else {
@@ -704,6 +830,16 @@ private extension DanmakuView {
     }
     
     func cellPlayingStop(_ cell: DanmakuCell) {
+#if os(macOS)
+        // Clean up hovered state if this cell was being hovered
+        if cell.model?.identifier == hoveredCell?.model?.identifier {
+            stopCurrentHovered()
+        }
+#endif
+        // Clean up toggled state (cross-platform)
+        if cell.model?.identifier == toggledCell?.model?.identifier {
+            stopCurrentToggled()
+        }
         // Match DanmuKitMac behavior: always remove from superview when a danmaku ends,
         // then optionally append to pool for reuse to avoid lingering views.
         delegate?.danmakuView(self, didEndDisplaying: cell)
@@ -714,12 +850,17 @@ private extension DanmakuView {
         }
     }
     
-    #if canImport(UIKit)
+#if canImport(UIKit)
     @objc
     func danmakuDidTap(_ tap: UITapGestureRecognizer) {
-        guard let view = tap.view as? DanmakuCell else { return }
-        delegate?.danmakuView(self, didTapped: view)
+        let p = tap.location(in: self)
+        if let cell = locateDanmakuCell(at: p) {
+            delegate?.danmakuView(self, didTapped: cell)
+            switchCurrentToggled(cell)
+        } else {
+            stopCurrentToggled()
+        }
     }
-    #endif
+#endif
     
 }

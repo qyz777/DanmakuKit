@@ -16,22 +16,26 @@ struct ExampleView: View {
     
     var body: some View {
         ZStack {
-            ExamplePlayerView(coordinator: viewModel.playerViewModel)
-                .onStatusChanged { [weak viewModel] in
-                    viewModel?.onStatusChanged($0)
-                }
-                .onCurrentTimeChanged { [weak viewModel] in
-                    viewModel?.onCurrentTimeChanged($0)
-                }
-            DanmakuViewAdapter(coordinator: viewModel.danmakuViewModel)
+            DanmakuViewAdapter(coordinator: viewModel.danmakuViewModel) {
+                ExamplePlayerView(coordinator: viewModel.playerViewModel)
+                    .onStatusChanged { [weak viewModel] in
+                        viewModel?.onStatusChanged($0)
+                    }
+                    .onCurrentTimeChanged { [weak viewModel] in
+                        viewModel?.onCurrentTimeChanged($0)
+                    }
+                    .onTapGesture {
+                        print("InnerView tapped")
+                    }
+                    .onAppear {
+                        viewModel.onAppear()
+                    }
+                    .onDisappear {
+                        viewModel.onDisappear()
+                    }
+            }
         }
         .background(Color.black)
-        .onAppear {
-            viewModel.onAppear()
-        }
-        .onDisappear {
-            viewModel.onDisappear()
-        }
     }
     
     class ExampleViewModel: ObservableObject {
@@ -48,6 +52,7 @@ struct ExampleView: View {
             danmakuViewModel.danmakuView?.paddingBottom = 20
             playerViewModel.setupPlayer()
             playerViewModel.play()
+            danmakuViewModel.danmakuViewDelegate = self
         }
         
         func onDisappear() {
@@ -186,6 +191,26 @@ struct ExamplePlayerView: UIViewRepresentable {
         
     }
     
+}
+
+extension ExampleView.ExampleViewModel: DanmakuViewDelegate {
+    func danmakuView(_ danmakuView: DanmakuView, didToggled danmaku: DanmakuCell) {
+        if danmakuView.status == .play,
+           danmaku.model?.type == .floating,
+           let model = danmaku.model
+        {
+            danmakuView.pause(model)
+        }
+    }
+
+    func danmakuView(_ danmakuView: DanmakuView, stopToggled danmaku: DanmakuCell) {
+        if danmakuView.status == .play,
+           danmaku.model?.type == .floating,
+           let model = danmaku.model
+        {
+            danmakuView.play(model)
+        }
+    }
 }
 
 #Preview {

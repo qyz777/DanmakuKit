@@ -24,7 +24,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  DanmakuKit: d740bb252cfb592c4f79b01288a57abfed9c1703
+  DanmakuKit: 97302f7335ba23d3c7c6e93733af6287cfc7f65a
   DeviceKit: aaa4743a15ef1e2021fe654dffa32a3ed15672aa
   SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
 

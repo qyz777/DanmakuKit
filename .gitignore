@@ -41,3 +41,5 @@ Example/*.xccheckout
 DanmuKitMacExample/Pods/
 DanmuKitMacExample/xcuserdata/
 DanmuKitMacExample/*.xccheckout
+
+.idea

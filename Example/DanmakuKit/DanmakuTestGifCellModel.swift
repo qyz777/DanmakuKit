@@ -17,7 +17,7 @@ class DanmakuTestGifCellModel: DanmakuGifCellModel, TestDanmakuCellModel, Equata
         return try? Data(contentsOf: url)
     }
     
-    var identifier = ""
+    var identifier = UUID().uuidString
     
     var text = ""
     

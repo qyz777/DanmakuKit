@@ -465,18 +465,35 @@ extension FunctionDemoViewController: DanmakuViewDelegate {
         }
     }
     
-    func danmakuView(_ danmakuView: DanmakuView, didTapped danmaku: DanmakuCell) {
-        guard var cellModel = danmaku.model as? (DanmakuCellModel & TestDanmakuCellModel) else { return }
-        if let cm = danmaku.model as? DanmakuTextCellModel {
-            print("tap %@ at tarck %d", cm.text, cm.track ?? 0)
-        }
-        if cellModel.isPause {
-            danmakuView.play(cellModel)
-            cellModel.isPause = false
-        } else {
-            danmakuView.pause(cellModel)
-            cellModel.isPause = true
+//    func danmakuView(_ danmakuView: DanmakuView, didTapped danmaku: DanmakuCell) {
+//        guard var cellModel = danmaku.model as? (DanmakuCellModel & TestDanmakuCellModel) else { return }
+//        if let cm = danmaku.model as? DanmakuTextCellModel {
+//            print("tap %@ at tarck %d", cm.text, cm.track ?? 0)
+//        }
+//        if cellModel.isPause {
+//            danmakuView.play(cellModel)
+//            cellModel.isPause = false
+//        } else {
+//            danmakuView.pause(cellModel)
+//            cellModel.isPause = true
+//        }
+//    }
+    
+    func danmakuView(_ danmakuView: DanmakuView, didToggled danmaku: DanmakuCell) {
+        if danmakuView.status == .play,
+           danmaku.model?.type == .floating,
+           let model = danmaku.model
+        {
+            danmakuView.pause(model)
         }
     }
-    
+
+    func danmakuView(_ danmakuView: DanmakuView, stopToggled danmaku: DanmakuCell) {
+        if danmakuView.status == .play,
+           danmaku.model?.type == .floating,
+           let model = danmaku.model
+        {
+            danmakuView.play(model)
+        }
+    }
 }
